@@ -1,0 +1,43 @@
+from sqlalchemy import Column, String, Date, BIGINT, Integer, Float, DECIMAL
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+
+class PlayerCombined(Base):
+    __tablename__ = "players_combined"
+    normalized_player_name = Column("Normalized Player Name", String(255), primary_key=True)
+    team                   = Column("Team",                   String(255), primary_key=True)
+    season                 = Column("Season",                 String(20),  primary_key=True)
+
+    original_player_name        = Column("Original Player Name",        String(255))
+    short_name                  = Column("Short Name",                  String(255))
+    normalized_short_name       = Column("Normalized Short Name",       String(255))
+    dob                         = Column("DoB",                         Date)
+    skillcorner_player_id       = Column("SkillCorner Player ID",       BIGINT)
+    team_id                     = Column("team_id",                     BIGINT)
+    season_id                   = Column("season_id",                   BIGINT)
+    position_group              = Column("position_group",              String(100))
+    competition_name            = Column("competition_name",            String(255))
+    competition_id              = Column("competition_id",              BIGINT)
+    minutes_full_all            = Column("minutes_full_all",            Float)
+    count_match                 = Column("count_match",                 Integer)
+    count_match_failed          = Column("count_match_failed",          Integer)
+    total_distance_full_all_p90 = Column("total_distance_full_all_p90", Float)
+    statsbomb_player_id         = Column("Statsbomb Player ID",         BIGINT)
+    positional_group            = Column("Positional Group",            String(100))
+    team_id_sb                  = Column("Team ID",                     BIGINT)
+    competition_id_sb           = Column("Competition ID",              BIGINT)
+    primary_position            = Column("Primary Position",            String(100))
+    secondary_position          = Column("Secondary Position",          String(100))
+    nineties_played             = Column("90s Played",                  Float)
+    age                         = Column("Age",                         DECIMAL(4, 2))
+    height                      = Column("Height",                      Integer)
+    defensive_obv_value         = Column("Defensive OBV Value",         Float)
+    dribble_carry_obv_value     = Column("Dribble&Carry OBV Value",     Float)
+    pass_obv_value              = Column("Pass OBV Value",              Float)
+    player_hyperlink            = Column("Player HyperLink",            String(500))
+    on_loan_from                = Column("on_loan_from",                String(255))
+    loan_contract_expires       = Column("loan_contract_expires",       Date)
+    contract_expires            = Column("contract_expires",            Date)
+    contract_option             = Column("contract_option",             String(255))
+    current_market_value        = Column("current_market_value",        String(50))
