@@ -179,12 +179,21 @@ def get_database_stats(db: Session) -> Dict[str, Any]:
     ).filter(
         PlayerCombined.competition_name.isnot(None)
     ).group_by(PlayerCombined.competition_name).all()
+
+    # Teams distribution
+    teams_stats = db.query(
+        PlayerCombined.team,
+        func.count(PlayerCombined.normalized_player_name)
+    ).filter(
+        PlayerCombined.team.isnot(None)
+    ).group_by(PlayerCombined.team).all()
     
     return {
         "total_players": total_players,
         "positions": dict(position_stats),
         "seasons": dict(season_stats),
-        "competitions": dict(competition_stats)
+        "competitions": dict(competition_stats),
+        "teams": dict(teams_stats)
     }
 
 def get_similar_players_with_service(

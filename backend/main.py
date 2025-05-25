@@ -62,10 +62,10 @@ def health_check():
         "api_version": "1.0.0"
     }
 
-@app.get("/players", response_model=PlayerResponse)
+@app.get("/players", response_model=PlayerResponse, response_model_by_alias=False,)
 def read_players(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
-    limit: int = Query(100, le=500, description="Maximum records to return"),
+    limit: int = Query(100, le=1000, description="Maximum records to return"),
     team: Optional[str] = Query(None, description="Filter by team name"),
     season: Optional[str] = Query(None, description="Filter by season"),
     position: Optional[str] = Query(None, description="Filter by position"),

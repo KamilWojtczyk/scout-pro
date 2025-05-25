@@ -10,7 +10,9 @@
           </div>
         </ng-template>
         <div class="text-center py-4">
-          <span class="text-6xl font-bold stat-highlight block">13,247</span>
+          <span class="text-6xl font-bold stat-highlight block">{{
+            stats().total_players
+          }}</span>
           <p class="text-muted-color mt-2 mb-0">Active in Database</p>
         </div>
       </p-card>
@@ -25,7 +27,9 @@
           </div>
         </ng-template>
         <div class="text-center py-4">
-          <span class="text-6xl font-bold text-color block">47</span>
+          <span class="text-6xl font-bold text-color block">{{
+            competitionsCnt()
+          }}</span>
           <p class="text-muted-color mt-2 mb-0">Leagues Covered</p>
         </div>
       </p-card>
@@ -40,7 +44,9 @@
           </div>
         </ng-template>
         <div class="text-center py-4">
-          <span class="text-6xl font-bold text-color block">12</span>
+          <span class="text-6xl font-bold text-color block">{{
+            positionsCnt()
+          }}</span>
           <p class="text-muted-color mt-2 mb-0">Player Positions</p>
         </div>
       </p-card>
@@ -76,7 +82,7 @@
               >Position</label
             >
             <p-dropdown
-              [options]="positionsOptions"
+              [options]="positionsOptions()"
               placeholder="Select Position"
               optionLabel="label"
               optionValue="value"
@@ -89,7 +95,7 @@
               >Team</label
             >
             <p-dropdown
-              [options]="teams"
+              [options]="teams()"
               placeholder="Select Team"
               optionLabel="label"
               optionValue="value"
@@ -104,9 +110,9 @@
         </div>
 
         <p-table
-          [value]="samplePlayers"
+          [value]="players()"
           [paginator]="true"
-          [rows]="5"
+          [rows]="7"
           [rowHover]="true"
           styleClass="p-datatable-sm"
         >
@@ -116,7 +122,7 @@
               <th>Position</th>
               <th>Team</th>
               <th>Age</th>
-              <th>Rating</th>
+              <th>Season</th>
               <th>Market Value</th>
               <th>Actions</th>
             </tr>
@@ -129,15 +135,17 @@
                   <div
                     class="bg-primary text-white border-circle w-2rem h-2rem flex align-items-center justify-content-center text-xs font-bold"
                   >
-                    {{ getPlayerInitials(player.name) }}
+                    {{ getPlayerInitials(player.original_player_name) }}
                   </div>
-                  <span class="font-medium">{{ player.name }}</span>
+                  <span class="font-medium">{{
+                    player.original_player_name
+                  }}</span>
                 </div>
               </td>
               <td>
                 <p-tag
-                  [value]="player.position"
-                  [style]="getPositionTagStyle(player.position)"
+                  [value]="player.primary_position"
+                  [style]="getPositionTagStyle(player.positional_group)"
                   [rounded]="true"
                 >
                 </p-tag>
@@ -145,13 +153,11 @@
               <td>{{ player.team }}</td>
               <td>{{ player.age }}</td>
               <td>
-                <span class="stat-highlight font-bold text-lg">{{
-                  player.rating
-                }}</span>
+                <span class="font-medium">{{ player.season }}</span>
               </td>
               <td>
                 <span class="font-medium">{{
-                  player.marketValue || "N/A"
+                  player.current_market_value || "N/A"
                 }}</span>
               </td>
               <td>

@@ -11,15 +11,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { TagModule } from 'primeng/tag';
 import { Formation, FORMATIONS } from './dashboard.model';
 import { FormsModule } from '@angular/forms';
-
-interface Player {
-  name: string;
-  position: string;
-  team: string;
-  age: number;
-  rating: number;
-  marketValue?: string;
-}
+import { DashboardStore } from '../../core/state/dashboard.store';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,6 +32,14 @@ interface Player {
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
+  private store = new DashboardStore();
+
+  players = this.store.players;
+  stats = this.store.stats;
+  totalPages = this.store.totalPages;
+  competitionsCnt = this.store.competitionsCount;
+  positionsCnt = this.store.positionsCount;
+
   formations = FORMATIONS;
   selectedFormation = this.formations[0];
 
@@ -53,64 +53,8 @@ export class DashboardComponent {
     this.selectedFormation = f;
   }
 
-  positionsOptions = [
-    { label: 'Goalkeeper', value: 'GK' },
-    { label: 'Defender', value: 'DEF' },
-    { label: 'Midfielder', value: 'MID' },
-    { label: 'Forward', value: 'FWD' },
-  ];
-
-  teams = [
-    { label: 'Barcelona', value: 'barcelona' },
-    { label: 'Real Madrid', value: 'real_madrid' },
-    { label: 'Manchester City', value: 'man_city' },
-    { label: 'Bayern Munich', value: 'bayern' },
-    { label: 'Liverpool', value: 'liverpool' },
-  ];
-
-  samplePlayers: Player[] = [
-    {
-      name: 'Lionel Messi',
-      position: 'RW',
-      team: 'Inter Miami',
-      age: 36,
-      rating: 9.2,
-      marketValue: '€25M',
-    },
-    {
-      name: 'Erling Haaland',
-      position: 'ST',
-      team: 'Manchester City',
-      age: 23,
-      rating: 9.0,
-      marketValue: '€180M',
-    },
-    {
-      name: 'Kevin De Bruyne',
-      position: 'CM',
-      team: 'Manchester City',
-      age: 32,
-      rating: 8.8,
-      marketValue: '€75M',
-    },
-    {
-      name: 'Virgil van Dijk',
-      position: 'CB',
-      team: 'Liverpool',
-      age: 32,
-      rating: 8.7,
-      marketValue: '€45M',
-    },
-    {
-      name: 'Alisson Becker',
-      position: 'GK',
-      team: 'Liverpool',
-      age: 30,
-      rating: 8.5,
-      marketValue: '€55M',
-    },
-  ];
-
+  positionsOptions = this.store.positionsOptions;
+  teams = this.store.teamsOptions;
   getPlayerInitials(name: string): string {
     return name
       .split(' ')
@@ -124,14 +68,11 @@ export class DashboardComponent {
     const colors: { [key: string]: string } = {
       GK: '#2563eb',
       CB: '#059669',
-      LB: '#059669',
-      RB: '#059669',
+      FB: '#059669',
       CM: '#7c3aed',
-      LM: '#7c3aed',
-      RM: '#7c3aed',
+      DM: '#7c3aed',
+      FOR: '#dc2626',
       ST: '#dc2626',
-      LW: '#dc2626',
-      RW: '#dc2626',
     };
 
     return {

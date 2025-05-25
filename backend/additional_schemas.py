@@ -17,6 +17,7 @@ class DatabaseStats(BaseModel):
     positions: Dict[str, int]
     seasons: Dict[str, int]
     competitions: Dict[str, int]
+    teams: Dict[str, int]
 
 class ErrorResponse(BaseModel):
     """Standard error response"""
