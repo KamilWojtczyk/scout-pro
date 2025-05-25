@@ -1,0 +1,228 @@
+<div class="surface-card p-2 border-round-lg">
+  <!-- Statistics Cards -->
+  <div class="grid mt-2 mb-2">
+    <div class="col-12 md:col-4">
+      <p-card class="h-full">
+        <ng-template pTemplate="header">
+          <div class="bg-primary text-white p-3 text-center border-round-top">
+            <i class="pi pi-users text-2xl mb-2 block"></i>
+            <h3 class="m-0 font-semibold">Total Players</h3>
+          </div>
+        </ng-template>
+        <div class="text-center py-4">
+          <span class="text-6xl font-bold stat-highlight block">13,247</span>
+          <p class="text-muted-color mt-2 mb-0">Active in Database</p>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <p-card class="h-full">
+        <ng-template pTemplate="header">
+          <div class="bg-surface-100 p-3 text-center border-round-top">
+            <i class="pi pi-globe text-2xl mb-2 block text-primary"></i>
+            <h3 class="m-0 font-semibold">Competitions</h3>
+          </div>
+        </ng-template>
+        <div class="text-center py-4">
+          <span class="text-6xl font-bold text-color block">47</span>
+          <p class="text-muted-color mt-2 mb-0">Leagues Covered</p>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <p-card class="h-full">
+        <ng-template pTemplate="header">
+          <div class="bg-surface-100 p-3 text-center border-round-top">
+            <i class="pi pi-map text-2xl mb-2 block text-primary"></i>
+            <h3 class="m-0 font-semibold">Positions</h3>
+          </div>
+        </ng-template>
+        <div class="text-center py-4">
+          <span class="text-6xl font-bold text-color block">12</span>
+          <p class="text-muted-color mt-2 mb-0">Player Positions</p>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Player Data Table -->
+  <p-panel header="Player Database" class="mb-4">
+    <ng-template pTemplate="header">
+      <div class="flex align-items-center gap-2">
+        <i class="pi pi-table text-primary"></i>
+        <span class="font-semibold">Player Database</span>
+      </div>
+    </ng-template>
+
+    <div class="dashboard-grid">
+      <div>
+        <div class="grid align-items-end">
+          <div class="col-12 md:col-3">
+            <label class="block text-sm font-medium mb-2 text-color"
+              >Search Player</label
+            >
+            <input
+              type="text"
+              pInputText
+              placeholder="Enter player name..."
+              class="w-full"
+              pRipple
+            />
+          </div>
+          <div class="col-12 md:col-3">
+            <label class="block text-sm font-medium mb-2 text-color"
+              >Position</label
+            >
+            <p-dropdown
+              [options]="positionsOptions"
+              placeholder="Select Position"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            >
+            </p-dropdown>
+          </div>
+          <div class="col-12 md:col-3">
+            <label class="block text-sm font-medium mb-2 text-color"
+              >Team</label
+            >
+            <p-dropdown
+              [options]="teams"
+              placeholder="Select Team"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            >
+            </p-dropdown>
+          </div>
+          <div class="col-12 md:col-3">
+            <p-button label="Search" icon="pi pi-search" class="w-full" pRipple>
+            </p-button>
+          </div>
+        </div>
+
+        <p-table
+          [value]="samplePlayers"
+          [paginator]="true"
+          [rows]="5"
+          [rowHover]="true"
+          styleClass="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Player</th>
+              <th>Position</th>
+              <th>Team</th>
+              <th>Age</th>
+              <th>Rating</th>
+              <th>Market Value</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-player>
+            <tr>
+              <td>
+                <div class="flex align-items-center gap-2">
+                  <div
+                    class="bg-primary text-white border-circle w-2rem h-2rem flex align-items-center justify-content-center text-xs font-bold"
+                  >
+                    {{ getPlayerInitials(player.name) }}
+                  </div>
+                  <span class="font-medium">{{ player.name }}</span>
+                </div>
+              </td>
+              <td>
+                <p-tag
+                  [value]="player.position"
+                  [style]="getPositionTagStyle(player.position)"
+                  [rounded]="true"
+                >
+                </p-tag>
+              </td>
+              <td>{{ player.team }}</td>
+              <td>{{ player.age }}</td>
+              <td>
+                <span class="stat-highlight font-bold text-lg">{{
+                  player.rating
+                }}</span>
+              </td>
+              <td>
+                <span class="font-medium">{{
+                  player.marketValue || "N/A"
+                }}</span>
+              </td>
+              <td>
+                <div class="flex gap-1">
+                  <p-button
+                    icon="pi pi-eye"
+                    [rounded]="true"
+                    [text]="true"
+                    size="small"
+                    pTooltip="View Details"
+                    tooltipPosition="top"
+                    pRipple
+                  >
+                  </p-button>
+                  <p-button
+                    icon="pi pi-users"
+                    [rounded]="true"
+                    [text]="true"
+                    size="small"
+                    pTooltip="Find Similar"
+                    tooltipPosition="top"
+                    pRipple
+                  >
+                  </p-button>
+                  <p-button
+                    icon="pi pi-heart"
+                    [rounded]="true"
+                    [text]="true"
+                    size="small"
+                    pTooltip="Add to Watchlist"
+                    tooltipPosition="top"
+                    pRipple
+                  >
+                  </p-button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Football Pitch Visualization -->
+      <div class="flex flex-column align-items-center">
+        <div class="football-pitch">
+          <!-- boxes (goal & penalty) -->
+          <div class="box goal top"></div>
+          <div class="box penalty top"></div>
+          <div class="box goal bottom"></div>
+          <div class="box penalty bottom"></div>
+
+          <!-- players -->
+          <div
+            *ngFor="let p of positions()"
+            class="position-circle"
+            [ngStyle]="{ bottom: p.bottom, left: p.left }"
+          >
+            {{ p.label }}
+          </div>
+        </div>
+
+        <!-- formation chips -->
+        <div class="flex gap-2 mt-3">
+          <p-button
+            *ngFor="let f of formations"
+            label="{{ f.name }}"
+            size="small"
+            [outlined]="f !== selectedFormation"
+            (onClick)="selectFormation(f)"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+</div>

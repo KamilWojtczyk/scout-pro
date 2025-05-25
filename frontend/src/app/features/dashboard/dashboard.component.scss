@@ -1,0 +1,110 @@
+/* === layout grid ====================================================== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 2rem;
+
+  @media (max-width: 991px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === pitch drawing ==================================================== */
+.football-pitch {
+  --line: rgba(255, 255, 255, 0.6);
+
+  position: relative;
+  width: 320px;
+  height: 540px;
+  background: #4caf50;
+  border: 3px solid #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+
+  /* grass stripes */
+  background-image: repeating-linear-gradient(
+    0deg,
+    #4caf50 0 28px,
+    #43a047 28px 56px
+  );
+
+  /* halfway line */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: var(--line);
+    transform: translateY(-1px);
+  }
+
+  /* centre circle */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140px;
+    height: 140px;
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &::before,
+  &::after {
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* boxes */
+  .box {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 2px solid var(--line);
+
+    &.goal {
+      width: 100px; /* 6-yard box width */
+      height: 40px;
+    }
+    &.penalty {
+      width: 200px;
+      height: 80px;
+    }
+
+    &.top {
+      top: 0;
+      border-top: none;
+    }
+    &.bottom {
+      bottom: 0;
+      border-bottom: none;
+    }
+  }
+}
+
+/* === player dots ====================================================== */
+.position-circle {
+  z-index: 2;
+  position: absolute;
+  width: 2.75rem;
+  height: 2.75rem;
+  transform: translate(-50%, -50%);
+  background: var(--p-primary-500);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
