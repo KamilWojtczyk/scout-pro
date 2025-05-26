@@ -1,21 +1,36 @@
 <div class="navbar p-3 surface-900 border-surface-700">
-  <div class="flex align-items-center justify-content-between gap-3 flex-wrap">
-    <div class="flex align-items-center gap-3">
-      <i class="pi pi-chart-line text-3xl text-primary-300"></i>
-      <div>
-        <h1 class="text-2xl m-0 line-height-1 text-primary-100 font-bold">
-          ScoutPro
-        </h1>
-        <small class="text-xs text-primary-300">Scouting Platform</small>
+  <div class="grid m-0">
+    <div class="col-3 p-0">
+      <div class="flex align-items-center gap-3">
+        <i class="pi pi-chart-line text-3xl text-primary-300"></i>
+        <div>
+          <h1 class="text-2xl m-0 line-height-1 text-primary-100 font-bold">
+            ScoutPro
+          </h1>
+          <small class="text-xs text-primary-300">Scouting Platform</small>
+        </div>
       </div>
     </div>
 
-    <p-button
-      label="Advanced Search"
-      icon="pi pi-search"
-      severity="contrast"
-      styleClass="p-button-outlined"
-      pRipple
-    ></p-button>
+    <div class="col-6 p-0">
+      <div class="flex gap-2">
+        <input
+          type="text"
+          pInputText
+          placeholder="Enter player name..."
+          class="w-full"
+          pRipple
+        />
+
+        <p-button
+          label="Search"
+          icon="pi pi-search"
+          class="w-full"
+          severity="secondary"
+          pRipple
+        >
+        </p-button>
+      </div>
+    </div>
   </div>
 </div>

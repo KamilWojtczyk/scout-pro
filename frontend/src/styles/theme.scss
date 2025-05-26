@@ -148,58 +148,9 @@
   font-weight: 500;
 }
 
-/* Custom Football-Specific Styles */
-.football-pitch {
-  background: linear-gradient(90deg, #166534 0%, #15803d 100%);
-  border: 2px solid #15803d;
-  border-radius: var(--p-content-border-radius);
-  position: relative;
-  min-height: 300px;
-
-  /* Football pitch lines */
-  background-image: linear-gradient(
-      90deg,
-      transparent 49.5%,
-      rgba(255, 255, 255, 0.3) 50%,
-      transparent 50.5%
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      transparent 80px,
-      rgba(255, 255, 255, 0.3) 80px,
-      rgba(255, 255, 255, 0.3) 82px,
-      transparent 82px
-    );
-  background-size: 100% 100%, 240px 240px;
-  background-position: center, center;
-}
-
-.position-circle {
-  width: 3rem;
-  height: 3rem;
-  background: var(--p-primary-600);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 2px solid white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    background: var(--p-primary-700);
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-  }
-}
-
 /* Stats Highlight */
 .stat-highlight {
-  color: var(--p-primary-600);
+  color: var(--p-primary-600) !important;
   font-weight: 700;
 }
 

@@ -43,6 +43,9 @@ export class DashboardComponent {
   formations = FORMATIONS;
   selectedFormation = this.formations[0];
 
+  positionsOptions = this.store.positionsOptions;
+  teams = this.store.teamsOptions;
+
   positions() {
     return Object.entries(this.selectedFormation.positions).map(
       ([label, { bottom, left }]) => ({ label, bottom, left })
@@ -52,9 +55,6 @@ export class DashboardComponent {
   selectFormation(f: Formation) {
     this.selectedFormation = f;
   }
-
-  positionsOptions = this.store.positionsOptions;
-  teams = this.store.teamsOptions;
   getPlayerInitials(name: string): string {
     return name
       .split(' ')
