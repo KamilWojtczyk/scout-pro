@@ -16,24 +16,22 @@
     </div>
 
     <div class="col-6 p-0">
-      <div class="flex gap-2">
-        <input
-          type="text"
-          pInputText
-          placeholder="Enter player name..."
-          class="w-full"
-          pRipple
-        />
-
-        <p-button
-          label="Search"
-          icon="pi pi-search"
-          class="w-full"
-          severity="secondary"
-          pRipple
-        >
-        </p-button>
-      </div>
+      <p-autoComplete
+        class="w-full"
+        [suggestions]="results()"
+        (completeMethod)="onSearch($event.query)"
+        (onSelect)="onPick($event)"
+        placeholder="Enter player name…"
+        field="original_player_name"
+        [forceSelection]="true"
+      >
+        <ng-template let-p pTemplate="item">
+          {{ p.original_player_name }}&nbsp;
+          <small class="text-muted-color">
+            ({{ p.team }} • {{ p.season }})</small
+          >
+        </ng-template>
+      </p-autoComplete>
     </div>
   </div>
 </div>

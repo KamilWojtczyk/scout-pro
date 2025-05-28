@@ -1,11 +1,4 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  inject,
-  signal,
-  effect,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
@@ -14,17 +7,30 @@ import { Router, ActivatedRoute } from '@angular/router';
 /* PrimeNG */
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { ChartModule } from 'primeng/chart';
 
 import { DashboardStore } from '../../core/state/dashboard.store';
-import { Player, SimilarPlayer } from '../../core/api/player.model';
+import { Player, PlayerMeta, SimilarPlayer } from '../../core/api/player.model';
 import { PlayerService } from '../../core/api/player.service';
-import { combineLatest, switchMap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { SelectModule } from 'primeng/select';
+import {
+  AutoCompleteModule,
+  AutoCompleteSelectEvent,
+} from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-player-detail',
@@ -38,7 +44,7 @@ import { SelectModule } from 'primeng/select';
     TagModule,
     AvatarModule,
     ProgressSpinnerModule,
-    ChartModule,
+    AutoCompleteModule,
   ],
   templateUrl: './player-details.component.html',
   styleUrls: ['./player-details.component.scss'],
@@ -51,7 +57,8 @@ export class PlayerDetailComponent {
   public readonly store = inject(DashboardStore);
   private readonly playerService = inject(PlayerService);
 
-  @ViewChild('comparisonSection') comparisonSection!: ElementRef<HTMLElement>;
+  compareQuery$ = new Subject<string>();
+  compareResults = signal<PlayerMeta[]>([]);
 
   /* ---------------- state ---------------- */
   player = signal<Player | null>(null);
@@ -90,10 +97,6 @@ export class PlayerDetailComponent {
   ];
 
   constructor() {
-    effect(() => {
-      this.allPlayers.set(this.store.players());
-    });
-
     combineLatest([this.route.paramMap, this.route.queryParamMap])
       .pipe(
         switchMap(([p, q]) =>
@@ -111,6 +114,21 @@ export class PlayerDetailComponent {
         },
         error: () => this.player.set(null),
       });
+
+    this.compareQuery$
+      .pipe(
+        tap((q) => {
+          if (q.trim().length < 2) this.compareResults.set([]);
+        }),
+        map((q) => q.trim()),
+        filter((q) => q.length >= 2),
+        debounceTime(250),
+        distinctUntilChanged(),
+        switchMap((q) =>
+          this.playerService.searchPlayers(q).pipe(catchError(() => of([])))
+        )
+      )
+      .subscribe((list) => this.compareResults.set(list));
   }
 
   private fetchSimilarPlayers(player: Player | null) {
@@ -131,6 +149,20 @@ export class PlayerDetailComponent {
       });
   }
 
+  onCompareSearch(term: string) {
+    this.compareQuery$.next(term);
+  }
+
+  onCompareSelect(meta: AutoCompleteSelectEvent) {
+    this.playerService
+      .getPlayer(
+        meta.value.original_player_name,
+        meta.value.team,
+        meta.value.season
+      )
+      .subscribe((full) => this.selectedComparisonPlayer.set(full));
+  }
+
   formatMetricValue(value: any, key: string): string {
     const numValue = +(value ?? 0);
 
@@ -146,7 +178,7 @@ export class PlayerDetailComponent {
 
   leftPct(k: string): number {
     const p = this.player();
-    const c = this.selectedComparisonPlayer;
+    const c = this.selectedComparisonPlayer();
     if (!p || !c) return 50;
 
     const a = +(p as any)[k];
@@ -172,6 +204,6 @@ export class PlayerDetailComponent {
   }
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/dashboard']);
   }
 }

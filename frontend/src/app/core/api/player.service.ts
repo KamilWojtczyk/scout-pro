@@ -5,6 +5,7 @@ import {
   DatabaseStats,
   Player,
   SimilarPlayer,
+  PlayerMeta,
 } from './player.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -17,8 +18,14 @@ export class PlayerService {
   list(
     params: Partial<Record<string, string | number | null>>
   ): Observable<PlayerResponse> {
+    let httpParams = new HttpParams();
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== null && v !== undefined) {
+        httpParams = httpParams.set(k, String(v));
+      }
+    }
     return this.http.get<PlayerResponse>(`${this.api}/players`, {
-      params: new HttpParams({ fromObject: params as any }),
+      params: httpParams,
     });
   }
 
@@ -54,5 +61,11 @@ export class PlayerService {
       )}/${encodeURIComponent(team)}/${encodeURIComponent(season)}/similar`,
       { params: { limit } }
     );
+  }
+
+  searchPlayers(q: string, limit = 20) {
+    return this.http.get<PlayerMeta[]>(`${this.api}/players/search`, {
+      params: { q, limit },
+    });
   }
 }

@@ -71,3 +71,11 @@ export interface SimilarPlayer {
   position: string;
   key_similarities: string[];
 }
+
+export interface PlayerMeta {
+  normalized_player_name: string;
+  original_player_name: string;
+  team: string;
+  season: string;
+  primary_position: string;
+}

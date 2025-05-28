@@ -28,7 +28,7 @@
               >Team</label
             >
             <p-dropdown
-              [options]="teams()"
+              [options]="teamsOptions()"
               placeholder="Select Team"
               optionLabel="label"
               optionValue="value"
@@ -43,9 +43,12 @@
         </div>
 
         <p-table
-          [value]="players()"
+          [value]="pageSlice()"
+          [lazy]="true"
           [paginator]="true"
           [rows]="11"
+          [totalRecords]="total()"
+          (onLazyLoad)="onLazy($event)"
           [rowHover]="true"
           styleClass="p-datatable-sm"
         >
@@ -129,7 +132,7 @@
           <div class="stat-card">
             <i class="pi pi-building stat-icon"></i>
             <div class="stat-content">
-              <span class="stat-number">{{ this.teams().length }}</span>
+              <span class="stat-number">{{ this.teamsOptions().length }}</span>
               <span class="stat-label">Teams</span>
             </div>
           </div>

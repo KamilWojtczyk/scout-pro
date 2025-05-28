@@ -269,6 +269,18 @@
   }
 }
 
+::ng-deep {
+  p-autoComplete {
+    display: block;
+    .p-autocomplete {
+      width: 100% !important;
+      .p-autocomplete-input {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
 /* ── Responsive Design ─────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .h2h-body {

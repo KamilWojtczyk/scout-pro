@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
@@ -37,17 +37,22 @@ export class DashboardComponent {
   private router = inject(Router);
   private store = inject(DashboardStore);
 
-  players = this.store.players;
   stats = this.store.stats;
-  totalPages = this.store.totalPages;
+  pageSlice = this.store.currentSlice;
+  total = this.store.total;
+
+  /* dropdown data */
+  positionsOptions = this.store.positionsOptions;
+  teamsOptions = this.store.teamsOptions;
   competitionsCnt = this.store.competitionsCount;
   positionsCnt = this.store.positionsCount;
 
   formations = FORMATIONS;
   selectedFormation = this.formations[0];
 
-  positionsOptions = this.store.positionsOptions;
-  teams = this.store.teamsOptions;
+  onLazy(event: TableLazyLoadEvent): void {
+    this.store.ensureChunk(event);
+  }
 
   positions() {
     return Object.entries(this.selectedFormation.positions).map(

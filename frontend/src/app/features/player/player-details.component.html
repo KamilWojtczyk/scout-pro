@@ -167,7 +167,7 @@
           </div>
 
           <div
-            class="side right player-section-clickable"
+            class="side right cursor-pointer"
             (click)="navigateToPlayer(selectedComparisonPlayer)"
             title="View {{
               selectedComparisonPlayer.original_player_name
@@ -267,15 +267,23 @@
 
       <!-- compare-with dropdown -->
       <p-panel header="Compare With" class="mt-4">
-        <p-select
-          [options]="allPlayers()"
-          [(ngModel)]="selectedComparisonPlayer"
-          optionLabel="original_player_name"
-          placeholder="Search player…"
-          [filter]="true"
-          filterBy="original_player_name"
+        <p-autoComplete
+          [suggestions]="compareResults()"
+          (completeMethod)="onCompareSearch($event.query)"
+          (onSelect)="onCompareSelect($event)"
+          field="original_player_name"
+          placeholder="Type a name…"
+          [forceSelection]="true"
           class="w-full"
-        />
+        >
+          <!-- custom item template -->
+          <ng-template let-p pTemplate="item">
+            {{ p.original_player_name }} &nbsp;
+            <small class="text-muted-color"
+              >({{ p.team }} • {{ p.season }})</small
+            >
+          </ng-template>
+        </p-autoComplete>
       </p-panel>
     </div>
   </div>
