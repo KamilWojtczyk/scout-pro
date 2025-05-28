@@ -62,7 +62,7 @@ def health_check():
         "api_version": "1.0.0"
     }
 
-@app.get("/players", response_model=PlayerResponse, response_model_by_alias=False,)
+@app.get("/players", response_model=PlayerResponse, response_model_by_alias=False)
 def read_players(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
     limit: int = Query(100, le=1000, description="Maximum records to return"),
@@ -109,7 +109,7 @@ def search_players_endpoint(
         logger.error(f"Error searching players: {e}")
         raise HTTPException(status_code=500, detail="Search failed")
 
-@app.get("/players/{normalized_name}/{team}/{season}", response_model=Player)
+@app.get("/player/{normalized_name}/{team}/{season:path}", response_model=Player, response_model_by_alias=False)
 def get_player(
     normalized_name: str = Path(..., description="Normalized player name"),
     team: str = Path(..., description="Team name"),
@@ -190,7 +190,7 @@ def get_competitions(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Competitions unavailable")
     
 
-@app.get("/players/{normalized_name}/{team}/{season}/similar", response_model=List[SimilarPlayerResponse])
+@app.get("/players/{normalized_name}/{team}/{season:path}/similar", response_model=List[SimilarPlayerResponse], response_model_by_alias=False)
 def get_similar_players_endpoint(
     normalized_name: str = Path(..., description="Normalized player name"),
     team: str = Path(..., description="Team name"),

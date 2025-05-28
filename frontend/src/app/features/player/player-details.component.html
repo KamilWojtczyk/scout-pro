@@ -1,0 +1,286 @@
+<div class="surface-card p-4 border-round-lg">
+  @if (player(); as player) {
+
+  <!-- Header -->
+  <div class="flex align-items-center justify-content-between mb-4">
+    <h1 class="text-3xl font-bold m-0">Player Profile</h1>
+    <p-button
+      icon="pi pi-arrow-left"
+      label="Back"
+      severity="secondary"
+      [outlined]="true"
+      (click)="goBack()"
+    />
+  </div>
+
+  <div class="grid">
+    <!-- ================= LEFT COLUMN ================= -->
+    <div class="col-12 lg:col-8">
+      <!-- Player Information -->
+      <p-panel header="Player Information" class="mb-4 info-panel">
+        <div class="flex gap-4">
+          <img
+            class="player-image border-circle"
+            [src]="playerImageUrl"
+            [alt]="player.original_player_name"
+            onerror="this.src='https://via.placeholder.com/120x120/6c757d/ffffff?text=No+Image'"
+          />
+
+          <div class="flex-1">
+            <h2 class="text-2xl font-bold mb-1">
+              {{ player.original_player_name }}
+            </h2>
+
+            <div class="flex align-items-center flex-wrap gap-2 mb-2">
+              <p-tag [value]="player.primary_position" [rounded]="true" />
+              @if (player.secondary_position) {
+              <p-tag
+                [value]="player.secondary_position"
+                severity="info"
+                [rounded]="true"
+              />
+              }
+              <span class="text-muted-color">{{ player.team }}</span>
+            </div>
+
+            <!-- headline stats -->
+            <div class="grid">
+              @for (r of basicRows; track r.key) {
+              <div class="col-6 md:col-3 py-2 text-center">
+                <div class="text-xl font-bold text-primary">
+                  {{ $any(player[r.key]) | number : "1.0-3" }}
+                </div>
+                <small class="text-muted-color">{{ r.label }}</small>
+              </div>
+              }
+            </div>
+
+            <!-- contract info -->
+            <ul class="contract-list mt-3">
+              @for (c of contractRows; track c.key) {
+              <li>
+                <span class="label">{{ c.label }}:</span>
+                <strong>{{ player[c.key] || "N/A" }}</strong>
+              </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </p-panel>
+
+      <!-- Season Statistics -->
+      <p-panel header="Season Statistics" class="mb-4 stats-panel">
+        <div class="grid text-center">
+          <!-- Performance -->
+          <div class="col-12 md:col-6 py-3">
+            <h3 class="text-lg font-bold m-0">Performance</h3>
+            <div class="stat-row">
+              <span class="stat-row-label">Minutes</span
+              ><span>{{
+                $any(player.minutes_full_all) | number : "1.0-3"
+              }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label">90s Played</span
+              ><span>{{
+                $any(player.nineties_played) | number : "1.0-3"
+              }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label">Matches</span
+              ><span>{{ $any(player.count_match) | number : "1.0-3" }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-row-label">Distance&nbsp;(p90)</span
+              ><span
+                >{{
+                  $any(player.total_distance_full_all_p90) | number : "1.0-3"
+                }}
+                m</span
+              >
+            </div>
+          </div>
+
+          <!-- OBV -->
+          <div class="col-12 md:col-6 py-3">
+            <h3 class="text-lg font-bold m-0">OBV</h3>
+            <div class="stat-row">
+              <span>Defensive</span>
+              <span
+                [ngClass]="{
+                  positive: player.defensive_obv_value > 0,
+                  negative: player.defensive_obv_value < 0
+                }"
+              >
+                {{ $any(player.defensive_obv_value) | number : "1.0-3" }}
+              </span>
+            </div>
+            <div class="stat-row">
+              <span>Dribble &amp; Carry</span>
+              <span
+                [ngClass]="{
+                  positive: player.dribble_carry_obv_value > 0,
+                  negative: player.dribble_carry_obv_value < 0
+                }"
+              >
+                {{ $any(player.dribble_carry_obv_value) | number : "1.0-3" }}
+              </span>
+            </div>
+            <div class="stat-row">
+              <span>Pass</span>
+              <span
+                [ngClass]="{
+                  positive: player.pass_obv_value > 0,
+                  negative: player.pass_obv_value < 0
+                }"
+              >
+                {{ $any(player.pass_obv_value) | number : "1.0-3" }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </p-panel>
+
+      <!-- Head-to-Head -->
+      @if (selectedComparisonPlayer(); as selectedComparisonPlayer) {
+      <p-panel
+        #comparisonSection
+        header="Head-to-Head Comparison"
+        class="mb-5 comparison-panel"
+      >
+        <!-- Enhanced Player Headers -->
+        <div class="player-captions pb-3">
+          <div class="side left">
+            <p-avatar
+              [image]="this.playerImageUrl"
+              size="large"
+              shape="circle"
+              class="player-avatar-main"
+            ></p-avatar>
+            <div class="txt">
+              <strong>{{ player.original_player_name }}</strong
+              ><br />
+              <small>{{ player.primary_position }} • {{ player.team }}</small
+              ><br />
+              <small>Age {{ player.age }} • {{ player.height }} cm</small>
+            </div>
+          </div>
+
+          <div
+            class="side right player-section-clickable"
+            (click)="navigateToPlayer(selectedComparisonPlayer)"
+            title="View {{
+              selectedComparisonPlayer.original_player_name
+            }}'s profile"
+          >
+            <p-avatar
+              [image]="this.playerImageUrl"
+              size="large"
+              shape="circle"
+              class="player-avatar-comparison"
+            ></p-avatar>
+            <div class="txt text-right">
+              <strong>{{
+                selectedComparisonPlayer.original_player_name
+              }}</strong
+              ><br />
+              <small
+                >{{ selectedComparisonPlayer.primary_position }} •
+                {{ selectedComparisonPlayer.team }}</small
+              ><br />
+              <small
+                >Age {{ selectedComparisonPlayer.age }} •
+                {{ selectedComparisonPlayer.height }} cm</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Comparison Body -->
+        <div class="h2h-body">
+          <div class="comparison-stats">
+            <!-- OBV Metrics Group -->
+            <div class="metric-group">
+              <div class="metric-group-title">Statistics Comparasion</div>
+
+              @for (row of statsRows; track row.key) {
+              <div class="comparison-row">
+                <div class="player-value left">
+                  {{ $any(player[row.key]) | number : "1.0-3" }}
+                </div>
+                <div class="comparison-bar-container">
+                  <div class="metric-label">{{ row.label }}</div>
+                  <div class="comparison-bar">
+                    <div
+                      class="bar-segment left"
+                      [style.width.%]="leftPct(row.key)"
+                    ></div>
+                    <div
+                      class="bar-segment right"
+                      [style.width.%]="rightPct(row.key)"
+                    ></div>
+                    <div class="bar-center-line"></div>
+                  </div>
+                </div>
+                <div class="player-value right">
+                  {{
+                    $any(selectedComparisonPlayer[row.key]) | number : "1.0-2"
+                  }}
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </p-panel>
+      }
+    </div>
+
+    <!-- ================= RIGHT COLUMN ================= -->
+    <div class="col-12 lg:col-4">
+      <!-- Similar players -->
+      <p-panel header="Similar Players" class="similar-panel">
+        @if (loadingSimilarPlayers) {
+        <div class="text-center py-4"><p-progressSpinner /></div>
+        } @else {
+        <ul class="similar-list p-0 m-0">
+          @for (sim of similarPlayers(); track
+          sim.player.normalized_player_name) {
+          <li class="similar-item" (click)="onSimilarPlayerClick(sim.player)">
+            <div>
+              {{ sim.player.original_player_name }}
+              <small class="text-muted-color"
+                >({{ sim.player.current_market_value || "N/A" }})</small
+              ><br />
+              <small class="text-muted-color">{{ sim.player.team }}</small>
+            </div>
+            <p-tag value="{{ sim.similarity_percentage }}%" severity="info" />
+          </li>
+          } @if (similarPlayers().length === 0) {
+          <li class="text-center text-muted-color py-3">
+            No similar players found.
+          </li>
+          }
+        </ul>
+        }
+      </p-panel>
+
+      <!-- compare-with dropdown -->
+      <p-panel header="Compare With" class="mt-4">
+        <p-select
+          [options]="allPlayers"
+          [(ngModel)]="selectedComparisonPlayer"
+          optionLabel="original_player_name"
+          placeholder="Search player…"
+          [filter]="true"
+          filterBy="original_player_name"
+          class="w-full"
+        />
+      </p-panel>
+    </div>
+  </div>
+
+  } @else {
+  <div class="text-center py-6"><p-progressSpinner /></div>
+  }
+</div>

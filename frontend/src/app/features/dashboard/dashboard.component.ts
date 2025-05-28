@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
@@ -12,6 +12,8 @@ import { TagModule } from 'primeng/tag';
 import { Formation, FORMATIONS } from './dashboard.model';
 import { FormsModule } from '@angular/forms';
 import { DashboardStore } from '../../core/state/dashboard.store';
+import { Router } from '@angular/router';
+import { Player } from '../../core/api/player.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,7 +34,8 @@ import { DashboardStore } from '../../core/state/dashboard.store';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  private store = new DashboardStore();
+  private router = inject(Router);
+  private store = inject(DashboardStore);
 
   players = this.store.players;
   stats = this.store.stats;
@@ -79,5 +82,14 @@ export class DashboardComponent {
       'background-color': colors[position] || 'var(--p-primary-600)',
       color: 'white',
     };
+  }
+
+  navigateToPlayer(player: Player) {
+    this.router.navigate(['/player', player.normalized_player_name], {
+      queryParams: {
+        team: player.team,
+        season: player.season,
+      },
+    });
   }
 }

@@ -35,10 +35,15 @@ class SimilarityService:
         if not ref_player:
             return []
         
+        desired_pos = ref_player.primary_position
+        
         # Find candidates with same position
         candidates = self.db.query(PlayerCombined).filter(
             and_(
-                PlayerCombined.primary_position == ref_player.primary_position,
+                or_(
+                    PlayerCombined.primary_position == desired_pos,
+                    PlayerCombined.secondary_position == desired_pos
+                ),
                 or_(
                     PlayerCombined.normalized_player_name != normalized_name,
                     PlayerCombined.team != team,

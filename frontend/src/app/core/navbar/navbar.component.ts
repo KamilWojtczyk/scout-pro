@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -10,4 +11,10 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  private router = inject(Router);
+
+  navigateToHomePage(): void {
+    this.router.navigate(['/dashboard']);
+  }
+}

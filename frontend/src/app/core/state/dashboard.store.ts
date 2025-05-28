@@ -1,8 +1,9 @@
-import { computed, effect, signal } from '@angular/core';
+import { computed, effect, Injectable, signal } from '@angular/core';
 import { PlayerService } from '../api/player.service';
 import { inject } from '@angular/core';
 import { Player } from '../api/player.model';
 
+@Injectable({ providedIn: 'root' })
 export class DashboardStore {
   private api = inject(PlayerService);
 

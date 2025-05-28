@@ -1,4 +1,6 @@
 export interface Player {
+  [key: string]: string | number | Date | undefined;
+
   normalized_player_name: string;
   team: string;
   season: string;
@@ -23,19 +25,19 @@ export interface Player {
 
   // StatsBomb data
   statsbomb_player_id?: number;
-  positional_group?: string;
+  positional_group: string;
   team_id_sb?: number;
   competition_id_sb?: number;
-  primary_position?: string;
+  primary_position: string;
   secondary_position?: string;
   nineties_played?: number;
   age?: number;
   height?: number;
 
   // OBV (On-Ball Value) metrics
-  defensive_obv_value?: number;
-  dribble_carry_obv_value?: number;
-  pass_obv_value?: number;
+  defensive_obv_value: number;
+  dribble_carry_obv_value: number;
+  pass_obv_value: number;
 
   // Additional information
   player_hyperlink?: string;
@@ -61,4 +63,11 @@ export interface DatabaseStats {
   seasons: Record<string, number>;
   competitions: Record<string, number>;
   teams: Record<string, number>;
+}
+
+export interface SimilarPlayer {
+  player: Player;
+  similarity_percentage: number;
+  position: string;
+  key_similarities: string[];
 }

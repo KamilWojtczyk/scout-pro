@@ -61,7 +61,7 @@
           </ng-template>
 
           <ng-template pTemplate="body" let-player>
-            <tr>
+            <tr class="cursor-pointer" (click)="navigateToPlayer(player)">
               <td>
                 <div class="flex align-items-center gap-2">
                   <div

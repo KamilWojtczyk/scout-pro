@@ -18,6 +18,13 @@ export const routes: Routes = [
             (x) => x.DashboardComponent
           ),
       },
+      {
+        path: 'player/:name',
+        loadComponent: () =>
+          import('./features/player/player-details.component').then(
+            (m) => m.PlayerDetailComponent
+          ),
+      },
     ],
   },
   { path: '**', redirectTo: '' },
