@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   signal,
+  effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -58,7 +59,7 @@ export class PlayerDetailComponent {
     'https://img.a.transfermarkt.technology/portrait/header/default.jpg?lm=1';
 
   selectedComparisonPlayer = signal<Player | null>(null);
-  allPlayers: Player[] = [];
+  allPlayers = signal<Player[]>([]);
 
   similarPlayers = signal<SimilarPlayer[]>([]);
   loadingSimilarPlayers = false;
@@ -89,6 +90,10 @@ export class PlayerDetailComponent {
   ];
 
   constructor() {
+    effect(() => {
+      this.allPlayers.set(this.store.players());
+    });
+
     combineLatest([this.route.paramMap, this.route.queryParamMap])
       .pipe(
         switchMap(([p, q]) =>
@@ -106,10 +111,6 @@ export class PlayerDetailComponent {
         },
         error: () => this.player.set(null),
       });
-  }
-
-  ngOnInit(): void {
-    this.allPlayers = this.store.players();
   }
 
   private fetchSimilarPlayers(player: Player | null) {

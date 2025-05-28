@@ -268,7 +268,7 @@
       <!-- compare-with dropdown -->
       <p-panel header="Compare With" class="mt-4">
         <p-select
-          [options]="allPlayers"
+          [options]="allPlayers()"
           [(ngModel)]="selectedComparisonPlayer"
           optionLabel="original_player_name"
           placeholder="Search player…"
