@@ -204,6 +204,6 @@ export class PlayerDetailComponent {
   }
 
   goBack() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['']);
   }
 }

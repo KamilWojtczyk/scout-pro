@@ -30,7 +30,7 @@ app = FastAPI(
 # Add CORS middleware for Angular frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200", "http://localhost:3000"],
+    allow_origins=["http://localhost:4200", "https://scout-pro-web.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
