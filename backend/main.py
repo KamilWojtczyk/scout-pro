@@ -72,6 +72,8 @@ def read_players(
     competition: Optional[str] = Query(None, description="Filter by competition"),
     min_age: Optional[float] = Query(None, ge=15, le=50, description="Minimum age"),
     max_age: Optional[float] = Query(None, ge=15, le=50, description="Maximum age"),
+    min_market_value: Optional[float] = Query(None, ge=0,  description="Minimum market value (€)"),
+    max_market_value: Optional[float] = Query(None, ge=0,  description="Maximum market value (€)"),
     min_minutes: Optional[float] = Query(None, ge=0, description="Minimum minutes"),
     search: Optional[str] = Query(None, description="Search player names"),
     sort_by: Optional[str] = Query("normalized_player_name", description="Sort field"),
@@ -85,7 +87,8 @@ def read_players(
         result = get_players(
             db=db, skip=skip, limit=limit, team=team, season=season,
             position=position, competition=competition, min_age=min_age,
-            max_age=max_age, min_minutes=min_minutes, search=search,
+            max_age=max_age, min_minutes=min_minutes, min_market_value=min_market_value, 
+            max_market_value=max_market_value, search=search,
             sort_by=sort_by, sort_order=sort_order
         )
         return PlayerResponse(**result)

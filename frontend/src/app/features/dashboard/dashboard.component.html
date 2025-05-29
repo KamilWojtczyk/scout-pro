@@ -10,34 +10,114 @@
 
       <div class="dashboard-grid">
         <div class="flex flex-column">
-          <div>
+          <!-- Position -------------------------------------------------------->
+          <div class="mb-4">
             <label class="block text-sm font-medium mb-2 text-color"
               >Position</label
             >
-            <p-dropdown
+            <p-select
               [options]="positionsOptions()"
+              [(ngModel)]="selectedPos"
               placeholder="Select Position"
               optionLabel="label"
               optionValue="value"
               class="w-full"
             >
-            </p-dropdown>
+            </p-select>
           </div>
-          <div>
+
+          <!-- Team ------------------------------------------------------------>
+          <div class="mb-4">
             <label class="block text-sm font-medium mb-2 text-color"
               >Team</label
             >
-            <p-dropdown
+            <p-select
               [options]="teamsOptions()"
+              [(ngModel)]="selectedTeam"
               placeholder="Select Team"
               optionLabel="label"
               optionValue="value"
               class="w-full"
             >
-            </p-dropdown>
+            </p-select>
           </div>
-          <div>
-            <p-button label="Search" icon="pi pi-search" class="w-full" pRipple>
+
+          <!-- Competition ----------------------------------------------------->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-2 text-color"
+              >Competition</label
+            >
+            <p-select
+              [options]="competitionsOptions()"
+              [(ngModel)]="selectedComp"
+              placeholder="Select Competition"
+              optionLabel="label"
+              optionValue="value"
+              class="w-full"
+            >
+            </p-select>
+          </div>
+
+          <!-- Age range ------------------------------------------------------->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-3 text-color">
+              Age {{ ageRange[0] }} – {{ ageRange[1] }}
+            </label>
+            <p-slider
+              [range]="true"
+              [(ngModel)]="ageRange"
+              [min]="15"
+              [max]="50"
+            >
+            </p-slider>
+          </div>
+
+          <!-- Minimum minutes ------------------------------------------------->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-3 text-color">
+              Min Minutes
+            </label>
+            <input
+              type="number"
+              pInputText
+              [(ngModel)]="minutesMin"
+              min="0"
+              class="w-full"
+            />
+          </div>
+
+          <!-- Market-value range --------------------------------------------->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1 text-color">
+              Market Value € {{ mvRange[0] | number : "1.0-0" }} –
+              {{ mvRange[1] | number : "1.0-0" }}
+            </label>
+            <p-slider
+              [range]="true"
+              [(ngModel)]="mvRange"
+              [min]="0"
+              [max]="50_000_000"
+              [step]="250_000"
+            >
+            </p-slider>
+          </div>
+
+          <!-- Search button --------------------------------------------------->
+          <div class="flex justify-content-between">
+            <p-button
+              label="Clear"
+              icon="pi pi-times"
+              class="w-full"
+              severity="secondary"
+              (onClick)="clearFilters()"
+            >
+            </p-button>
+            <p-button
+              label="Search"
+              icon="pi pi-filter"
+              class="w-full"
+              (onClick)="applyFilters()"
+            >
             </p-button>
           </div>
         </div>

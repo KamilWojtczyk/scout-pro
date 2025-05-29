@@ -1,8 +1,26 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, func, desc, asc
+from sqlalchemy import and_, or_, func, desc, asc, case, cast, Float
 from models import PlayerCombined
 from typing import Optional, List, Dict, Any
 from similarity_service import SimilarityService
+
+def _eur_string_to_float(col):
+    """
+    Parse '€2.00m', '€800k', '€450000' to a numeric value (euros) *inside SQL*.
+    Works on MySQL / MariaDB.
+    """
+    stripped = func.replace(col, '€', '')
+
+    no_m     = func.replace(stripped, 'm', '')
+    no_k     = func.replace(no_m,      'k', '')
+
+    base_val = cast(no_k, Float)
+
+    return case(
+        (col.ilike('%m'), base_val * 1_000_000),
+        (col.ilike('%k'), base_val * 1_000),
+        else_=base_val,
+    )
 
 def get_players(
     db: Session,
@@ -15,6 +33,8 @@ def get_players(
     min_age: Optional[float] = None,
     max_age: Optional[float] = None,
     min_minutes: Optional[float] = None,
+    min_market_value: Optional[float] = None,
+    max_market_value: Optional[float] = None,
     search: Optional[str] = None,
     sort_by: str = "normalized_player_name",
     sort_order: str = "asc"
@@ -44,6 +64,15 @@ def get_players(
         query = query.filter(PlayerCombined.age <= max_age)
     if min_minutes:
         query = query.filter(PlayerCombined.minutes_full_all >= min_minutes)
+
+    # --- market value range ---------------------------------------------
+    if min_market_value is not None or max_market_value is not None:
+        mv = _eur_string_to_float(PlayerCombined.current_market_value)
+        print(mv)
+        if min_market_value is not None:
+            query = query.filter(mv >= min_market_value)
+        if max_market_value is not None:
+            query = query.filter(mv <= max_market_value)
     if search:
         search_term = f"%{search}%"
         query = query.filter(

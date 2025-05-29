@@ -1,3 +1,12 @@
+@if (!isMobile) {
 <div class="p-4 pb-0 min-h-screen surface-ground">
   <router-outlet></router-outlet>
 </div>
+} @else {
+<div class="mobile-message">
+  <p>
+    Sorry, this application is not available on mobile devices. Please use a PC,
+    laptop, or tablet.
+  </p>
+</div>
+}

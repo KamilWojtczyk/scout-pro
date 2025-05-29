@@ -5,7 +5,6 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TagModule } from 'primeng/tag';
@@ -14,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { DashboardStore } from '../../core/state/dashboard.store';
 import { Router } from '@angular/router';
 import { Player } from '../../core/api/player.model';
+import { SliderModule } from 'primeng/slider';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,9 +27,11 @@ import { Player } from '../../core/api/player.model';
     CardModule,
     TableModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     PanelModule,
     ToolbarModule,
+    SliderModule,
+    InputNumberModule,
     TagModule,
   ],
   templateUrl: './dashboard.component.html',
@@ -39,6 +43,7 @@ export class DashboardComponent {
 
   stats = this.store.stats;
   pageSlice = this.store.currentSlice;
+  competitionsOptions = this.store.competitionsOptions;
   total = this.store.total;
 
   /* dropdown data */
@@ -47,8 +52,44 @@ export class DashboardComponent {
   competitionsCnt = this.store.competitionsCount;
   positionsCnt = this.store.positionsCount;
 
+  selectedPos: string | null = null;
+  selectedTeam: string | null = null;
+  selectedComp: string | null = null;
+  ageRange: [number, number] = [15, 50];
+  minutesMin: number | null = null;
+  mvRange: [number, number] = [0, 50_000_000];
+
   formations = FORMATIONS;
   selectedFormation = this.formations[0];
+
+  applyFilters(): void {
+    this.store.setPosition(this.selectedPos);
+    this.store.setTeam(this.selectedTeam);
+    this.store.setCompetition(this.selectedComp);
+    this.store.setAgeRange(this.ageRange);
+    this.store.setMinutesMin(this.minutesMin);
+    this.store.setMarketRange(this.mvRange);
+
+    this.store.ensureChunk({ first: 0 } as any);
+  }
+
+  clearFilters(): void {
+    this.selectedPos = null;
+    this.selectedTeam = null;
+    this.selectedComp = null;
+    this.ageRange = [15, 50];
+    this.minutesMin = null;
+    this.mvRange = [0, 50_000_000];
+
+    this.store.setPosition(null);
+    this.store.setTeam(null);
+    this.store.setCompetition(null);
+    this.store.setAgeRange(this.ageRange);
+    this.store.setMinutesMin(null);
+    this.store.setMarketRange(this.mvRange);
+
+    this.store.ensureChunk({ first: 0 } as any);
+  }
 
   onLazy(event: TableLazyLoadEvent): void {
     this.store.ensureChunk(event);
