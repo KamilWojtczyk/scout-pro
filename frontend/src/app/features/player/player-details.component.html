@@ -27,9 +27,24 @@
           />
 
           <div class="flex-1">
-            <h2 class="text-2xl font-bold mb-1">
-              {{ player.original_player_name }}
-            </h2>
+            <div class="flex justify-content-between">
+              <h2 class="text-2xl font-bold mb-1">
+                {{ player.original_player_name }}
+              </h2>
+
+              <a
+                [href]="transfermarktUrl"
+                target="_blank"
+                rel="noopener"
+                class="no-underline"
+              >
+                <p-button
+                  icon="pi pi-external-link"
+                  label="Transfermarkt"
+                  styleClass="p-button-outlined p-button-rounded"
+                ></p-button>
+              </a>
+            </div>
 
             <div class="flex align-items-center flex-wrap gap-2 mb-2">
               <p-tag [value]="player.primary_position" [rounded]="true" />

@@ -96,6 +96,11 @@ export class PlayerDetailComponent {
     { label: 'Pass OBV', key: 'pass_obv_value' },
   ];
 
+  get transfermarktUrl(): string {
+    const href = this.player()?.player_hyperlink;
+    return href ? `https://www.transfermarkt.co.uk${href}` : '';
+  }
+
   constructor() {
     combineLatest([this.route.paramMap, this.route.queryParamMap])
       .pipe(
