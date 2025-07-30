@@ -230,6 +230,7 @@
               *ngFor="let p of positions()"
               class="position-circle"
               [ngStyle]="{ bottom: p.bottom, left: p.left }"
+              (click)="onPitchPositionClick(p.label)"
             >
               {{ p.label }}
             </div>
@@ -249,3 +250,39 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  [(visible)]="showTopDialog"
+  [header]="'Top Players - ' + (clickedPosition() || 'Position')"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="top-players-dialog-content">
+    @for (player of topPlayers(); track player.normalizedName) {
+    <div
+      class="top-player-item-dialog"
+      (click)="navigateToPlayerFromDialog(player)"
+    >
+      <div class="top-player-info">
+        <img [src]="getPlayerImageUrl(player)" class="top-player-avatar" />
+        <div class="top-player-details">
+          <h4>{{ player.originalPlayerName }}</h4>
+          <p>{{ player.teamName }} • {{ player.positionTm }}</p>
+          <small>{{ player.currentMarketValue || "N/A" }}</small>
+        </div>
+      </div>
+    </div>
+    } @if (topPlayers().length === 0) {
+    <div class="text-center text-muted-color py-4">
+      <i
+        class="pi pi-info-circle"
+        style="font-size: 2rem; margin-bottom: 1rem"
+      ></i>
+      <p>No players found for this position.</p>
+    </div>
+    }
+  </div>
+</p-dialog>

@@ -96,10 +96,19 @@ export interface SimilarPlayer {
 export interface PlayerMeta {
   normalizedName: string;
   teamName: string;
-  position: string;
+  positionTm: string;
 }
 
-export type Bucket = 'GK' | 'CB' | 'FB' | 'DM' | 'CM' | 'AM' | 'W' | 'ST';
+export type Bucket =
+  | 'GK'
+  | 'CB'
+  | 'RB'
+  | 'LB'
+  | 'DM'
+  | 'CM'
+  | 'AM'
+  | 'W'
+  | 'ST';
 
 export const BUCKET_STATS: Record<Bucket, Array<keyof Player>> = {
   GK: [
@@ -118,7 +127,15 @@ export const BUCKET_STATS: Record<Bucket, Array<keyof Player>> = {
     'aerialsWon',
     'passesCompleted',
   ],
-  FB: [
+  RB: [
+    'assists',
+    'crossesCompleted',
+    'keyPasses',
+    'dribbleSuccessPct',
+    'tackles',
+    'interceptions',
+  ],
+  LB: [
     'assists',
     'crossesCompleted',
     'keyPasses',
@@ -166,4 +183,41 @@ export const BUCKET_STATS: Record<Bucket, Array<keyof Player>> = {
     'dribbleSuccessPct',
     'aerialsWon',
   ],
+};
+
+export const MAP: Record<string, Bucket> = {
+  GK: 'GK',
+
+  CB: 'CB',
+  LCB: 'CB',
+  RCB: 'CB',
+
+  LB: 'LB',
+  RB: 'RB',
+  LWB: 'LB',
+  RWB: 'RB',
+
+  DM: 'DM',
+  LDM: 'DM',
+  RDM: 'DM',
+  CDM: 'DM',
+
+  CM: 'CM',
+  LCM: 'CM',
+  RCM: 'CM',
+
+  AM: 'AM',
+  CAM: 'AM',
+
+  LW: 'W',
+  RW: 'W',
+  LM: 'W',
+  RM: 'W',
+  LLM: 'W',
+  RRM: 'W',
+
+  ST: 'ST',
+  CF: 'ST',
+  LST: 'ST',
+  RST: 'ST',
 };

@@ -1,21 +1,25 @@
-import { Bucket, Player } from '../api/player.model';
+import { Bucket, MAP, Player } from '../api/player.model';
 
 export function bucketOf(posRaw: string | undefined): Bucket {
   const p = (posRaw ?? '').toLowerCase();
 
   if (p.includes('keeper')) return 'GK';
 
-  if (p.includes('centre-back') || p.includes('centre back')) return 'CB';
-  if (p.includes('left-back') || p.includes('right-back')) return 'FB';
+  if (p.includes('centre-back')) return 'CB';
+  if (p.includes('left-back')) return 'LB';
+  if (p.includes('right-back')) return 'RB';
 
-  if (p.includes('defensive mid')) return 'DM';
-  if (p.includes('attacking mid')) return 'AM';
-  if (p.includes('central mid')) return 'CM';
+  if (p.includes('defensive midfield')) return 'DM';
+  if (p.includes('attacking midfield')) return 'AM';
+  if (p.includes('central midfield')) return 'CM';
   if (p.includes('midfield')) return 'CM';
 
   if (p.includes('wing')) return 'W';
 
-  if (p.includes('forward') || p.includes('striker')) return 'ST';
+  if (p.includes('forward') || p.includes('striker') || p.includes('attack'))
+    return 'ST';
+
+  if (p.includes('defender')) return 'CB';
 
   return 'ST';
 }
@@ -91,4 +95,8 @@ export function norm(s: string): string {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .trim();
+}
+
+export function formationLabelToBucket(label: string): Bucket {
+  return MAP[label.toUpperCase()] ?? 'ST';
 }

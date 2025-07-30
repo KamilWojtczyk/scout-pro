@@ -61,4 +61,24 @@ export const FORMATIONS: Formation[] = [
       RST: { bottom: '70%', left: '60%' },
     },
   },
+  {
+    name: '4-2-3-1',
+    positions: {
+      GK: { bottom: '1%', left: '50%' },
+
+      LB: { bottom: '17%', left: '18%' },
+      LCB: { bottom: '15%', left: '40%' },
+      RCB: { bottom: '15%', left: '60%' },
+      RB: { bottom: '17%', left: '82%' },
+
+      LDM: { bottom: '34%', left: '40%' },
+      RDM: { bottom: '34%', left: '60%' },
+
+      LW: { bottom: '58%', left: '20%' },
+      AM: { bottom: '60%', left: '50%' },
+      RW: { bottom: '58%', left: '80%' },
+
+      ST: { bottom: '72%', left: '50%' },
+    },
+  },
 ];

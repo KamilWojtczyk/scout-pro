@@ -21,6 +21,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DashboardStore } from '../../core/state/dashboard.store';
 import { Player, PlayerMeta, SimilarPlayer } from '../../core/api/player.model';
 import { PlayerService } from '../../core/api/player.service';
+import { HeadToHeadComparisonComponent } from '../head-to-head-comparison/head-to-head-comparison.component';
 import {
   catchError,
   combineLatest,
@@ -61,6 +62,7 @@ interface ComparisonCategory {
     MessageModule,
     DialogModule,
     TooltipModule,
+    HeadToHeadComparisonComponent,
   ],
   templateUrl: './player-details.component.html',
   styleUrls: ['./player-details.component.scss'],
@@ -82,9 +84,7 @@ export class PlayerDetailComponent {
   // Dialog states
   showSimilarPlayersDialog = false;
   showCompareDialog = false;
-
-  // Chart instance
-  private radarChart: any = null;
+  showHeadToHeadDialog = false;
 
   get playerImageUrl(): string {
     return this.player()?.imageUrl ?? '';
@@ -307,25 +307,28 @@ export class PlayerDetailComponent {
 
   onCompareSelectDialog(event: AutoCompleteSelectEvent) {
     this.playerService
-      .getPlayer(event.value.originalPlayerName, event.value.teamName)
+      .getPlayer(event.value.normalizedName, event.value.teamName)
       .subscribe((full) => {
         this.selectedComparisonPlayer.set(full ?? null);
         this.showCompareDialog = false;
+        this.showHeadToHeadDialog = true;
       });
   }
 
   selectSimilarPlayerForComparison(player: Player) {
     this.selectedComparisonPlayer.set(player);
     this.showSimilarPlayersDialog = false;
+    this.showHeadToHeadDialog = true;
   }
 
   compareWithSimilarPlayer(player: Player) {
     this.selectedComparisonPlayer.set(player);
     this.showSimilarPlayersDialog = false;
+    this.showHeadToHeadDialog = true;
   }
 
   navigateToPlayer(player: Player) {
-    this.router.navigate(['/player', player.originalPlayerName], {
+    this.router.navigate(['/player', player.normalizedName], {
       queryParams: { teamName: player.teamName },
     });
     this.selectedComparisonPlayer.set(null);
@@ -333,14 +336,24 @@ export class PlayerDetailComponent {
 
   clearComparison() {
     this.selectedComparisonPlayer.set(null);
-    if (this.radarChart) {
-      this.radarChart.destroy();
-      this.radarChart = null;
-    }
   }
 
   goBack() {
     this.router.navigate(['']);
+  }
+
+  onHeadToHeadDialogClose() {
+    this.showHeadToHeadDialog = false;
+    this.selectedComparisonPlayer.set(null);
+  }
+
+  onViewPlayer1Profile(player: Player) {
+    this.showHeadToHeadDialog = false;
+  }
+
+  onViewPlayer2Profile(player: Player) {
+    this.navigateToPlayer(player);
+    this.showHeadToHeadDialog = false;
   }
 
   private fetchSimilarPlayers(player: Player | null) {

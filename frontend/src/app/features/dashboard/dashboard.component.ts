@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ButtonModule } from 'primeng/button';
@@ -16,6 +16,9 @@ import { Player } from '../../core/api/player.model';
 import { SliderModule } from 'primeng/slider';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
+import { PlayerService } from '../../core/api/player.service';
+import { DialogModule } from 'primeng/dialog';
+import { formationLabelToBucket } from '../../core/func/functions';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,6 +36,7 @@ import { SelectModule } from 'primeng/select';
     SliderModule,
     InputNumberModule,
     TagModule,
+    DialogModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -40,6 +44,7 @@ import { SelectModule } from 'primeng/select';
 export class DashboardComponent {
   private router = inject(Router);
   private store = inject(DashboardStore);
+  private playerService = inject(PlayerService);
 
   stats = this.store.stats;
   pageSlice = this.store.currentSlice;
@@ -61,6 +66,10 @@ export class DashboardComponent {
 
   formations = FORMATIONS;
   selectedFormation = this.formations[0];
+
+  topPlayers = signal<Player[]>([]);
+  showTopDialog = false;
+  clickedPosition = signal<string | null>(null);
 
   applyFilters(): void {
     this.store.setPosition(this.selectedPos);
@@ -99,6 +108,28 @@ export class DashboardComponent {
     return Object.entries(this.selectedFormation.positions).map(
       ([label, { bottom, left }]) => ({ label, bottom, left })
     );
+  }
+
+  onPitchPositionClick(label: string) {
+    this.clickedPosition.set(label);
+    this.playerService.getTopPlayers(label, 6).subscribe((rows) => {
+      this.topPlayers.set(rows);
+      this.showTopDialog = true;
+    });
+  }
+
+  navigateToPlayerFromDialog(player: Player): void {
+    this.showTopDialog = false;
+
+    this.router.navigate(['/player', player.normalizedName], {
+      queryParams: {
+        teamName: player.teamName,
+      },
+    });
+  }
+
+  getPlayerImageUrl(player: Player): string {
+    return player.imageUrl ?? '';
   }
 
   selectFormation(f: Formation) {

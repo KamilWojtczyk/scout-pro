@@ -7,6 +7,7 @@ import {
   switchMap,
   map,
   shareReplay,
+  filter,
 } from 'rxjs';
 import Papa from 'papaparse';
 import {
@@ -25,12 +26,17 @@ import {
   vector,
   euclidean,
   similarityPct,
+  formationLabelToBucket,
 } from '../func/functions';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
   private readonly http = inject(HttpClient);
   private readonly players$ = new BehaviorSubject<Player[] | null>(null);
+
+  private get allPlayers(): Player[] {
+    return this.players$.value ?? [];
+  }
 
   private loadCsv(): void {
     if (this.players$.value) return;
@@ -166,11 +172,11 @@ export class PlayerService {
   getPlayer(name: string, team: string) {
     this.loadCsv();
     return this.players$.pipe(
-      map((rows) =>
-        (rows ?? []).find(
+      map((rows) => {
+        return (rows ?? []).find(
           (p) => p.normalizedName === name && p.teamName === team
-        )
-      )
+        );
+      })
     );
   }
 
@@ -186,7 +192,7 @@ export class PlayerService {
             normalizedName: p.normalizedName,
             originalPlayerName: p.originalPlayerName,
             teamName: p.teamName,
-            position: p.positionTm ?? '',
+            positionTm: p.positionTm ?? '',
           }))
       )
     );
@@ -218,6 +224,42 @@ export class PlayerService {
         return scored
           .sort((a, b) => b.similarityPercentage - a.similarityPercentage)
           .slice(0, limit);
+      })
+    );
+  }
+
+  getTopPlayers(formationLabel: string, topN = 6): Observable<Player[]> {
+    this.loadCsv();
+
+    const bucket = formationLabelToBucket(formationLabel);
+    const metricKeys = BUCKET_STATS[bucket];
+    if (!metricKeys) return of([]);
+
+    return this.players$.pipe(
+      filter((rows): rows is Player[] => !!rows),
+      map((rows) => {
+        const eligible = rows.filter((p) => bucketOf(p.positionTm) === bucket);
+        if (eligible.length === 0) return [];
+
+        const max: Record<string, number> = {};
+        for (const key of metricKeys) {
+          max[key as string] = Math.max(
+            ...eligible.map((r) => Number((r as any)[key] ?? 0))
+          );
+        }
+
+        const withScore = eligible.map((p) => {
+          const score = metricKeys.reduce<number>((acc, k) => {
+            const v = Number((p as any)[k] ?? 0);
+            return acc + v / (max[k as string] || 1);
+          }, 0);
+          return { ...p, __score__: score };
+        });
+
+        return withScore
+          .sort((a, b) => b.__score__ - a.__score__)
+          .slice(0, topN)
+          .map(({ __score__, ...rest }) => rest);
       })
     );
   }

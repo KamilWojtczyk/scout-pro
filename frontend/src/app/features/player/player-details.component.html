@@ -1,4 +1,4 @@
-<div class="surface-card py-2 px-8 border-round-lg">
+<div class="surface-card py-2 px-6 border-round-lg">
   @if (player(); as player) {
 
   <!-- Header -->
@@ -551,116 +551,6 @@
           </p-tabPanel>
         </p-tabView>
       </p-panel>
-
-      <!-- Comparison View (when comparison is active) -->
-      @if (selectedComparisonPlayer(); as comparisonPlayer) {
-      <p-panel header="Player Comparison" class="mb-4 comparison-panel">
-        <!-- Comparison Header -->
-        <div class="comparison-header-new">
-          <div class="comparison-player-card left">
-            <img [src]="playerImageUrl" class="comparison-player-avatar" />
-            <div class="comparison-player-info">
-              <h3>{{ player.originalPlayerName }}</h3>
-              <p>{{ player.teamName }} • {{ player.positionTm }}</p>
-              <div class="comparison-rating">{{ player.ratingAvg }}/10</div>
-            </div>
-          </div>
-
-          <div class="comparison-vs">
-            <span>VS</span>
-          </div>
-
-          <div
-            class="comparison-player-card right"
-            (click)="navigateToPlayer(comparisonPlayer)"
-          >
-            <img
-              [src]="getPlayerImageUrl(comparisonPlayer)"
-              class="comparison-player-avatar"
-            />
-            <div class="comparison-player-info">
-              <h3>{{ comparisonPlayer.originalPlayerName }}</h3>
-              <p>
-                {{ comparisonPlayer.teamName }} •
-                {{ comparisonPlayer.positionTm }}
-              </p>
-              <div class="comparison-rating">
-                {{ comparisonPlayer.ratingAvg }}/10
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Radar Chart Section -->
-        <div class="comparison-radar-section mb-4">
-          <h4 class="section-title">Performance Overview</h4>
-          <div class="radar-chart-container">
-            <canvas #radarChart class="radar-chart"></canvas>
-          </div>
-        </div>
-
-        <!-- Detailed Stats Comparison -->
-        <div class="comparison-stats-detailed">
-          @for (category of comparisonCategories; track category.title) {
-          <div class="comparison-category mb-4">
-            <h4 class="category-title">{{ category.title }}</h4>
-            <div class="stats-comparison-grid">
-              @for (stat of category.stats; track stat.key) {
-              <div class="stat-comparison-row">
-                <div class="stat-name">{{ stat.label }}</div>
-                <div class="stat-values">
-                  <div class="stat-value player-1">
-                    {{ getPlayerStat(player, stat.key) }}
-                  </div>
-                  <div class="stat-bar">
-                    <div class="bar-container">
-                      <div
-                        class="bar-fill player-1"
-                        [style.width.%]="
-                          getComparisonPercentage(
-                            player,
-                            comparisonPlayer,
-                            stat.key,
-                            'left'
-                          )
-                        "
-                      ></div>
-                      <div
-                        class="bar-fill player-2"
-                        [style.width.%]="
-                          getComparisonPercentage(
-                            player,
-                            comparisonPlayer,
-                            stat.key,
-                            'right'
-                          )
-                        "
-                      ></div>
-                    </div>
-                  </div>
-                  <div class="stat-value player-2">
-                    {{ getPlayerStat(comparisonPlayer, stat.key) }}
-                  </div>
-                </div>
-              </div>
-              }
-            </div>
-          </div>
-          }
-        </div>
-
-        <!-- Clear Comparison Button -->
-        <div class="text-center mt-4">
-          <p-button
-            label="Clear Comparison"
-            icon="pi pi-times"
-            severity="secondary"
-            [outlined]="true"
-            (click)="clearComparison()"
-          />
-        </div>
-      </p-panel>
-      }
     </div>
   </div>
 
@@ -779,7 +669,7 @@
           <div class="search-item-info">
             <strong>{{ p.originalPlayerName }}</strong>
             <small class="text-muted-color d-block"
-              >{{ p.teamName }} • {{ p.positionTm || p.season }}</small
+              >{{ p.teamName }} • {{ p.positionTm }}</small
             >
           </div>
         </div>
@@ -792,3 +682,13 @@
     </p>
   </div>
 </p-dialog>
+
+@if (player() && selectedComparisonPlayer()) {
+<app-head-to-head-comparison
+  [(visible)]="showHeadToHeadDialog"
+  [player1]="player()!"
+  [player2]="selectedComparisonPlayer()!"
+  (viewPlayer1)="onViewPlayer1Profile($event)"
+  (viewPlayer2)="onViewPlayer2Profile($event)"
+/>
+}
