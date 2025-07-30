@@ -55,8 +55,8 @@ export class NavbarComponent {
   }
 
   onPick(meta: AutoCompleteSelectEvent) {
-    this.router.navigate(['/player', meta.value.original_player_name], {
-      queryParams: { team: meta.value.team, season: meta.value.season },
+    this.router.navigate(['/player', meta.value.normalizedName], {
+      queryParams: { teamName: meta.value.teamName },
     });
   }
 

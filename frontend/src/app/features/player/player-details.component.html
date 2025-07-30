@@ -1,8 +1,8 @@
-<div class="surface-card p-4 border-round-lg">
+<div class="surface-card py-2 px-8 border-round-lg">
   @if (player(); as player) {
 
   <!-- Header -->
-  <div class="flex align-items-center justify-content-between mb-4">
+  <div class="flex align-items-center justify-content-between mb-2">
     <h1 class="text-3xl font-bold m-0">Player Profile</h1>
     <p-button
       icon="pi pi-arrow-left"
@@ -14,23 +14,38 @@
   </div>
 
   <div class="grid">
-    <!-- ================= LEFT COLUMN ================= -->
-    <div class="col-12 lg:col-8">
-      <!-- Player Information -->
+    <div class="col-12">
       <p-panel header="Player Information" class="mb-4 info-panel">
         <div class="flex gap-4">
-          <img
-            class="player-image border-circle"
-            [src]="playerImageUrl"
-            [alt]="player.original_player_name"
-            onerror="this.src='https://via.placeholder.com/120x120/6c757d/ffffff?text=No+Image'"
-          />
+          <div class="player-image-container">
+            <img
+              class="player-image border-round-3xl"
+              [src]="playerImageUrl"
+              [alt]="player.originalPlayerName"
+              onerror="this.src='https://via.placeholder.com/120x120/6c757d/ffffff?text=No+Image'"
+            />
+          </div>
 
           <div class="flex-1">
-            <div class="flex justify-content-between">
-              <h2 class="text-2xl font-bold mb-1">
-                {{ player.original_player_name }}
-              </h2>
+            <div class="flex justify-content-between align-items-start mb-3">
+              <div>
+                <h2 class="text-2xl font-bold mb-1">
+                  {{ player.originalPlayerName }}
+                </h2>
+                <div class="flex align-items-center flex-wrap gap-2 mb-2">
+                  <p-tag
+                    [value]="player.positionTm || 'Player'"
+                    [rounded]="true"
+                  />
+                  <span class="text-muted-color">{{ player.teamName }}</span>
+                  <span class="text-muted-color">•</span>
+                  <span class="text-muted-color"
+                    >{{ player.tournamentName }} ({{
+                      player.tournamentCountry
+                    }})</span
+                  >
+                </div>
+              </div>
 
               <a
                 [href]="transfermarktUrl"
@@ -42,268 +57,738 @@
                   icon="pi pi-external-link"
                   label="Transfermarkt"
                   styleClass="p-button-outlined p-button-rounded"
-                ></p-button>
+                />
               </a>
             </div>
 
-            <div class="flex align-items-center flex-wrap gap-2 mb-2">
-              <p-tag [value]="player.primary_position" [rounded]="true" />
-              @if (player.secondary_position) {
-              <p-tag
-                [value]="player.secondary_position"
-                severity="info"
-                [rounded]="true"
-              />
-              }
-              <span class="text-muted-color">{{ player.team }}</span>
-            </div>
-
-            <!-- headline stats -->
-            <div class="grid">
-              @for (r of basicRows; track r.key) {
-              <div class="col-6 md:col-3 py-2 text-center">
-                <div class="text-xl font-bold text-primary">
-                  {{ $any(player[r.key]) | number : "1.0-3" }}
+            <div class="performance-highlights mb-3">
+              <div class="grid">
+                @if (!isGoalkeeper) {
+                <div class="col-6 md:col-3 text-center performance-stat">
+                  <div class="text-2xl font-bold text-green-600">
+                    {{ player.goals }}
+                  </div>
+                  <small class="text-muted-color">Goals</small>
                 </div>
-                <small class="text-muted-color">{{ r.label }}</small>
+                <div class="col-6 md:col-3 text-center performance-stat">
+                  <div class="text-2xl font-bold text-blue-600">
+                    {{ player.assists }}
+                  </div>
+                  <small class="text-muted-color">Assists</small>
+                </div>
+                } @else {
+                <div class="col-6 md:col-3 text-center performance-stat">
+                  <div class="text-2xl font-bold text-green-600">
+                    {{ player.savesInsideBox || 0 }}
+                  </div>
+                  <small class="text-muted-color">Saves</small>
+                </div>
+                <div class="col-6 md:col-3 text-center performance-stat">
+                  <div class="text-2xl font-bold text-blue-600">
+                    {{ player.goalsPrevented || 0 }}
+                  </div>
+                  <small class="text-muted-color">Goals Prevented</small>
+                </div>
+                }
+                <div class="col-6 md:col-3 text-center performance-stat">
+                  <div class="text-2xl font-bold text-purple-600">
+                    {{ player.ratingAvg }}
+                  </div>
+                  <small class="text-muted-color">Rating</small>
+                </div>
+                <div class="col-6 md:col-3 text-center performance-stat">
+                  <div class="text-2xl font-bold text-orange-600">
+                    {{ Math.round(player.minutesPlayed / 90) }}
+                  </div>
+                  <small class="text-muted-color">Games</small>
+                </div>
               </div>
-              }
             </div>
 
-            <!-- contract info -->
-            <ul class="contract-list mt-3">
-              @for (c of contractRows; track c.key) {
-              <li>
-                <span class="label">{{ c.label }}:</span>
-                <strong>{{ player[c.key] || "N/A" }}</strong>
-              </li>
-              }
-            </ul>
+            <!-- Player Details -->
+            <div class="player-details grid">
+              <div class="col-12 md:col-6">
+                <div class="detail-row">
+                  <span class="detail-label">Age:</span>
+                  <strong>{{ player.age }}</strong>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Height:</span>
+                  <strong>{{ player.heightTm }}</strong>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Preferred Foot:</span>
+                  <strong>{{ player.foot | titlecase }}</strong>
+                </div>
+              </div>
+              <div class="col-12 md:col-6">
+                <div class="detail-row">
+                  <span class="detail-label">Market Value:</span>
+                  <strong>{{ player.currentMarketValue || "N/A" }}</strong>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Contract Expires:</span>
+                  <strong>{{ player.contractExpires || "N/A" }}</strong>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Minutes Played:</span>
+                  <strong>{{ player.minutesPlayed | number }}</strong>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </p-panel>
 
-      <!-- Season Statistics -->
+      <!-- Statistics Tabs -->
       <p-panel header="Season Statistics" class="mb-4 stats-panel">
-        <div class="grid text-center">
-          <!-- Performance -->
-          <div class="col-12 md:col-6 py-3">
-            <h3 class="text-lg font-bold m-0">Performance</h3>
-            <div class="stat-row">
-              <span class="stat-row-label">Minutes</span
-              ><span>{{
-                $any(player.minutes_full_all) | number : "1.0-3"
-              }}</span>
+        <p-tabView class="stats-tabs">
+          <!-- Overview Tab -->
+          <p-tabPanel header="Overview">
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Performance</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Touches</span>
+                    <span class="stat-value">{{
+                      player.touches | number
+                    }}</span>
+                  </div>
+                  @if (!isGoalkeeper) {
+                  <div class="stat-item">
+                    <span class="stat-label">Pass Accuracy</span>
+                    <span class="stat-value"
+                      >{{ getPassAccuracy(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Dribble Success</span>
+                    <span class="stat-value"
+                      >{{ player.dribbleSuccessPct }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Aerial Win Rate</span>
+                    <span class="stat-value"
+                      >{{ getAerialWinRate(player) }}%</span
+                    >
+                  </div>
+                  } @else {
+                  <div class="stat-item">
+                    <span class="stat-label">Long Ball Accuracy</span>
+                    <span class="stat-value"
+                      >{{ getLongBallAccuracy(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">High Claims</span>
+                    <span class="stat-value">{{ player.highClaims || 0 }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Key Stats</h4>
+                <div class="stats-grid">
+                  @if (!isGoalkeeper) {
+                  <div class="stat-item">
+                    <span class="stat-label">Key Passes</span>
+                    <span class="stat-value">{{ player.keyPasses }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Tackles</span>
+                    <span class="stat-value">{{ player.tackles }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Interceptions</span>
+                    <span class="stat-value">{{ player.interceptions }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Fouls Committed</span>
+                    <span class="stat-value">{{ player.foulsCommitted }}</span>
+                  </div>
+                  } @else {
+                  <div class="stat-item">
+                    <span class="stat-label">Saves (Box)</span>
+                    <span class="stat-value">{{
+                      player.savesInsideBox || 0
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Penalties Saved</span>
+                    <span class="stat-value">{{
+                      player.penaltiesSaved || 0
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Punches</span>
+                    <span class="stat-value">{{ player.punches || 0 }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Successful Runs-Out</span>
+                    <span class="stat-value">{{
+                      player.runsOutSuccess || 0
+                    }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
             </div>
-            <div class="stat-row">
-              <span class="stat-row-label">90s Played</span
-              ><span>{{
-                $any(player.nineties_played) | number : "1.0-3"
-              }}</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label">Matches</span
-              ><span>{{ $any(player.count_match) | number : "1.0-3" }}</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-row-label">Distance&nbsp;(p90)</span
-              ><span
-                >{{
-                  $any(player.total_distance_full_all_p90) | number : "1.0-3"
-                }}
-                m</span
-              >
-            </div>
-          </div>
+          </p-tabPanel>
 
-          <!-- OBV -->
-          <div class="col-12 md:col-6 py-3">
-            <h3 class="text-lg font-bold m-0">OBV</h3>
-            <div class="stat-row">
-              <span>Defensive</span>
-              <span
-                [ngClass]="{
-                  positive: player.defensive_obv_value > 0,
-                  negative: player.defensive_obv_value < 0
-                }"
-              >
-                {{ $any(player.defensive_obv_value) | number : "1.0-3" }}
-              </span>
+          @if (!isGoalkeeper) {
+          <!-- Offensive Tab (Outfield Players Only) -->
+          <p-tabPanel header="Offensive">
+            <div class="grid">
+              <div class="col-12 md:col-4">
+                <h4 class="stats-section-title">Shooting</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Shots on Target</span>
+                    <span class="stat-value">{{ player.shotsOnTarget }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Shots off Target</span>
+                    <span class="stat-value">{{ player.shotsOffTarget }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Hit Woodwork</span>
+                    <span class="stat-value">{{ player.hitWoodwork }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 md:col-4">
+                <h4 class="stats-section-title">Creativity</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Big Chances Created</span>
+                    <span class="stat-value">{{
+                      player.bigChancesCreated
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Big Chances Missed</span>
+                    <span class="stat-value">{{
+                      player.bigChancesMissed
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Key Passes</span>
+                    <span class="stat-value">{{ player.keyPasses }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 md:col-4">
+                <h4 class="stats-section-title">Dribbling</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Dribbles Completed</span>
+                    <span class="stat-value"
+                      >{{ player.dribblesCompleted }}/{{
+                        player.dribbleAttempts
+                      }}</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Success Rate</span>
+                    <span class="stat-value"
+                      >{{ player.dribbleSuccessPct }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Offsides</span>
+                    <span class="stat-value">{{ player.offsides }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="stat-row">
-              <span>Dribble &amp; Carry</span>
-              <span
-                [ngClass]="{
-                  positive: player.dribble_carry_obv_value > 0,
-                  negative: player.dribble_carry_obv_value < 0
-                }"
-              >
-                {{ $any(player.dribble_carry_obv_value) | number : "1.0-3" }}
-              </span>
+          </p-tabPanel>
+
+          <!-- Defensive Tab (Outfield Players Only) -->
+          <p-tabPanel header="Defensive">
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Defensive Actions</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Total Actions</span>
+                    <span class="stat-value">{{
+                      player.defensiveActions
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Tackles</span>
+                    <span class="stat-value">{{ player.tackles }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Interceptions</span>
+                    <span class="stat-value">{{ player.interceptions }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Clearances</span>
+                    <span class="stat-value">{{ player.clearances }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Blocked Shots</span>
+                    <span class="stat-value">{{ player.blockedShots }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Duels & Aerials</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Aerials Won</span>
+                    <span class="stat-value"
+                      >{{ player.aerialsWon }}/{{
+                        player.aerialsWon + player.aerialsLost
+                      }}</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Aerial Win Rate</span>
+                    <span class="stat-value"
+                      >{{ getAerialWinRate(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Ground Duels</span>
+                    <span class="stat-value">{{
+                      player.groundDuelsTotal
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Ground Duel Win%</span>
+                    <span class="stat-value"
+                      >{{ player.groundDuelsWinPct }}%</span
+                    >
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="stat-row">
-              <span>Pass</span>
-              <span
-                [ngClass]="{
-                  positive: player.pass_obv_value > 0,
-                  negative: player.pass_obv_value < 0
-                }"
-              >
-                {{ $any(player.pass_obv_value) | number : "1.0-3" }}
-              </span>
+          </p-tabPanel>
+          } @else {
+          <!-- Goalkeeper-specific tabs -->
+          <p-tabPanel header="Shot Stopping">
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Saves</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Saves (Box)</span>
+                    <span class="stat-value">{{
+                      player.savesInsideBox || 0
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Penalties Saved</span>
+                    <span class="stat-value">{{
+                      player.penaltiesSaved || 0
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Goals Prevented</span>
+                    <span class="stat-value">{{
+                      player.goalsPrevented || 0
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Positioning</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">High Claims</span>
+                    <span class="stat-value">{{ player.highClaims || 0 }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Punches</span>
+                    <span class="stat-value">{{ player.punches || 0 }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Successful Runs-Out</span>
+                    <span class="stat-value">{{
+                      player.runsOutSuccess || 0
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Shots Blocked</span>
+                    <span class="stat-value">{{
+                      player.shotsBlocked || 0
+                    }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </p-tabPanel>
+          }
+
+          <!-- Passing Tab (All Players) -->
+          <p-tabPanel header="Passing">
+            <div class="grid">
+              <div class="col-12 md:col-6">
+                <h4 class="stats-section-title">Pass Distribution</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Total Passes</span>
+                    <span class="stat-value">{{ player.passes | number }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Passes Completed</span>
+                    <span class="stat-value">{{
+                      player.passesCompleted | number
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Pass Accuracy</span>
+                    <span class="stat-value"
+                      >{{ getPassAccuracy(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Long Balls</span>
+                    <span class="stat-value">{{ player.longBalls }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Long Balls Completed</span>
+                    <span class="stat-value">{{
+                      player.longBallsCompleted
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 md:col-6">
+                @if (!isGoalkeeper) {
+                <h4 class="stats-section-title">Crossing & Key Passes</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Crosses</span>
+                    <span class="stat-value">{{ player.crosses }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Crosses Completed</span>
+                    <span class="stat-value">{{
+                      player.crossesCompleted
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Cross Accuracy</span>
+                    <span class="stat-value"
+                      >{{ getCrossAccuracy(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Key Passes</span>
+                    <span class="stat-value">{{ player.keyPasses }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Possessions Lost</span>
+                    <span class="stat-value">{{ player.possessionsLost }}</span>
+                  </div>
+                </div>
+                } @else {
+                <h4 class="stats-section-title">Distribution Accuracy</h4>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Long Ball Accuracy</span>
+                    <span class="stat-value"
+                      >{{ getLongBallAccuracy(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Possessions Lost</span>
+                    <span class="stat-value">{{ player.possessionsLost }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Aerials Won</span>
+                    <span class="stat-value">{{ player.aerialsWon }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Aerial Win Rate</span>
+                    <span class="stat-value"
+                      >{{ getAerialWinRate(player) }}%</span
+                    >
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </p-tabPanel>
+
+          <!-- Discipline Tab (All Players) -->
+          <p-tabPanel header="Discipline">
+            <div class="grid">
+              <div class="col-12 md:col-12">
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <span class="stat-label">Fouls Committed</span>
+                    <span class="stat-value text-red-600">{{
+                      player.foulsCommitted
+                    }}</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Times Fouled</span>
+                    <span class="stat-value">{{ player.timesFouled }}</span>
+                  </div>
+                  @if (!isGoalkeeper) {
+                  <div class="stat-item">
+                    <span class="stat-label">Challenge Success</span>
+                    <span class="stat-value"
+                      >{{ getChallengeSuccessRate(player) }}%</span
+                    >
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-label">Challenges Lost</span>
+                    <span class="stat-value text-red-600">{{
+                      player.challengeLost
+                    }}</span>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
       </p-panel>
 
-      <!-- Head-to-Head -->
-      @if (selectedComparisonPlayer(); as selectedComparisonPlayer) {
-      <p-panel
-        #comparisonSection
-        header="Head-to-Head Comparison"
-        class="mb-5 comparison-panel"
-      >
-        <!-- Enhanced Player Headers -->
-        <div class="player-captions pb-3">
-          <div class="side left">
-            <p-avatar
-              [image]="this.playerImageUrl"
-              size="large"
-              shape="circle"
-              class="player-avatar-main"
-            ></p-avatar>
-            <div class="txt">
-              <strong>{{ player.original_player_name }}</strong
-              ><br />
-              <small>{{ player.primary_position }} • {{ player.team }}</small
-              ><br />
-              <small>Age {{ player.age }} • {{ player.height }} cm</small>
+      <!-- Comparison View (when comparison is active) -->
+      @if (selectedComparisonPlayer(); as comparisonPlayer) {
+      <p-panel header="Player Comparison" class="mb-4 comparison-panel">
+        <!-- Comparison Header -->
+        <div class="comparison-header-new">
+          <div class="comparison-player-card left">
+            <img [src]="playerImageUrl" class="comparison-player-avatar" />
+            <div class="comparison-player-info">
+              <h3>{{ player.originalPlayerName }}</h3>
+              <p>{{ player.teamName }} • {{ player.positionTm }}</p>
+              <div class="comparison-rating">{{ player.ratingAvg }}/10</div>
             </div>
+          </div>
+
+          <div class="comparison-vs">
+            <span>VS</span>
           </div>
 
           <div
-            class="side right cursor-pointer"
-            (click)="navigateToPlayer(selectedComparisonPlayer)"
-            title="View {{
-              selectedComparisonPlayer.original_player_name
-            }}'s profile"
+            class="comparison-player-card right"
+            (click)="navigateToPlayer(comparisonPlayer)"
           >
-            <p-avatar
-              [image]="this.playerImageUrl"
-              size="large"
-              shape="circle"
-              class="player-avatar-comparison"
-            ></p-avatar>
-            <div class="txt text-right">
-              <strong>{{
-                selectedComparisonPlayer.original_player_name
-              }}</strong
-              ><br />
-              <small
-                >{{ selectedComparisonPlayer.primary_position }} •
-                {{ selectedComparisonPlayer.team }}</small
-              ><br />
-              <small
-                >Age {{ selectedComparisonPlayer.age }} •
-                {{ selectedComparisonPlayer.height }} cm</small
-              >
+            <img
+              [src]="getPlayerImageUrl(comparisonPlayer)"
+              class="comparison-player-avatar"
+            />
+            <div class="comparison-player-info">
+              <h3>{{ comparisonPlayer.originalPlayerName }}</h3>
+              <p>
+                {{ comparisonPlayer.teamName }} •
+                {{ comparisonPlayer.positionTm }}
+              </p>
+              <div class="comparison-rating">
+                {{ comparisonPlayer.ratingAvg }}/10
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Enhanced Comparison Body -->
-        <div class="h2h-body">
-          <div class="comparison-stats">
-            <!-- OBV Metrics Group -->
-            <div class="metric-group">
-              <div class="metric-group-title">Statistics Comparasion</div>
+        <!-- Radar Chart Section -->
+        <div class="comparison-radar-section mb-4">
+          <h4 class="section-title">Performance Overview</h4>
+          <div class="radar-chart-container">
+            <canvas #radarChart class="radar-chart"></canvas>
+          </div>
+        </div>
 
-              @for (row of statsRows; track row.key) {
-              <div class="comparison-row">
-                <div class="player-value left">
-                  {{ $any(player[row.key]) | number : "1.0-3" }}
-                </div>
-                <div class="comparison-bar-container">
-                  <div class="metric-label">{{ row.label }}</div>
-                  <div class="comparison-bar">
-                    <div
-                      class="bar-segment left"
-                      [style.width.%]="leftPct(row.key)"
-                    ></div>
-                    <div
-                      class="bar-segment right"
-                      [style.width.%]="rightPct(row.key)"
-                    ></div>
-                    <div class="bar-center-line"></div>
+        <!-- Detailed Stats Comparison -->
+        <div class="comparison-stats-detailed">
+          @for (category of comparisonCategories; track category.title) {
+          <div class="comparison-category mb-4">
+            <h4 class="category-title">{{ category.title }}</h4>
+            <div class="stats-comparison-grid">
+              @for (stat of category.stats; track stat.key) {
+              <div class="stat-comparison-row">
+                <div class="stat-name">{{ stat.label }}</div>
+                <div class="stat-values">
+                  <div class="stat-value player-1">
+                    {{ getPlayerStat(player, stat.key) }}
                   </div>
-                </div>
-                <div class="player-value right">
-                  {{
-                    $any(selectedComparisonPlayer[row.key]) | number : "1.0-2"
-                  }}
+                  <div class="stat-bar">
+                    <div class="bar-container">
+                      <div
+                        class="bar-fill player-1"
+                        [style.width.%]="
+                          getComparisonPercentage(
+                            player,
+                            comparisonPlayer,
+                            stat.key,
+                            'left'
+                          )
+                        "
+                      ></div>
+                      <div
+                        class="bar-fill player-2"
+                        [style.width.%]="
+                          getComparisonPercentage(
+                            player,
+                            comparisonPlayer,
+                            stat.key,
+                            'right'
+                          )
+                        "
+                      ></div>
+                    </div>
+                  </div>
+                  <div class="stat-value player-2">
+                    {{ getPlayerStat(comparisonPlayer, stat.key) }}
+                  </div>
                 </div>
               </div>
               }
             </div>
           </div>
+          }
+        </div>
+
+        <!-- Clear Comparison Button -->
+        <div class="text-center mt-4">
+          <p-button
+            label="Clear Comparison"
+            icon="pi pi-times"
+            severity="secondary"
+            [outlined]="true"
+            (click)="clearComparison()"
+          />
         </div>
       </p-panel>
       }
     </div>
+  </div>
 
-    <!-- ================= RIGHT COLUMN ================= -->
-    <div class="col-12 lg:col-4">
-      <!-- Similar players -->
-      <p-panel header="Similar Players" class="similar-panel">
-        @if (loadingSimilarPlayers) {
-        <div class="text-center py-4"><p-progressSpinner /></div>
-        } @else {
-        <ul class="similar-list p-0 m-0">
-          @for (sim of similarPlayers(); track
-          sim.player.normalized_player_name) {
-          <li class="similar-item" (click)="onSimilarPlayerClick(sim.player)">
-            <div>
-              {{ sim.player.original_player_name }}
-              <small class="text-muted-color"
-                >({{ sim.player.current_market_value || "N/A" }})</small
-              ><br />
-              <small class="text-muted-color">{{ sim.player.team }}</small>
-            </div>
-            <p-tag value="{{ sim.similarity_percentage }}%" severity="info" />
-          </li>
-          } @if (similarPlayers().length === 0) {
-          <li class="text-center text-muted-color py-3">
-            No similar players found.
-          </li>
-          }
-        </ul>
-        }
-      </p-panel>
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <p-button
+      icon="pi pi-users"
+      [rounded]="true"
+      [outlined]="true"
+      severity="info"
+      class="floating-btn similar-btn"
+      (click)="showSimilarPlayersDialog = true"
+      pTooltip="Find Similar Players"
+      tooltipPosition="left"
+    />
 
-      <!-- compare-with dropdown -->
-      <p-panel header="Compare With" class="mt-4">
-        <p-autoComplete
-          [suggestions]="compareResults()"
-          (completeMethod)="onCompareSearch($event.query)"
-          (onSelect)="onCompareSelect($event)"
-          field="original_player_name"
-          placeholder="Type a name…"
-          [forceSelection]="true"
-          class="w-full"
-        >
-          <!-- custom item template -->
-          <ng-template let-p pTemplate="item">
-            {{ p.original_player_name }} &nbsp;
-            <small class="text-muted-color"
-              >({{ p.team }} • {{ p.season }})</small
-            >
-          </ng-template>
-        </p-autoComplete>
-      </p-panel>
-    </div>
+    <p-button
+      icon="pi pi-chart-bar"
+      [rounded]="true"
+      [outlined]="true"
+      severity="success"
+      class="floating-btn compare-btn"
+      (click)="showCompareDialog = true"
+      pTooltip="Compare Player"
+      tooltipPosition="left"
+    />
   </div>
 
   } @else {
-  <div class="text-center py-6"><p-progressSpinner /></div>
+  <div class="text-center py-6">
+    <p-progressSpinner />
+  </div>
   }
 </div>
+
+<p-dialog
+  [(visible)]="showSimilarPlayersDialog"
+  header="Similar Players"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  @if (loadingSimilarPlayers) {
+  <div class="text-center py-4">
+    <p-progressSpinner />
+  </div>
+  } @else {
+  <div class="similar-players-dialog-content">
+    @for (sim of similarPlayers(); track sim.player.originalPlayerName) {
+    <div
+      class="similar-player-item-dialog"
+      (click)="selectSimilarPlayerForComparison(sim.player)"
+    >
+      <div class="similar-player-info">
+        <img
+          [src]="getPlayerImageUrl(sim.player)"
+          class="similar-player-avatar"
+        />
+        <div class="similar-player-details">
+          <h4>{{ sim.player.originalPlayerName }}</h4>
+          <p>{{ sim.player.teamName }} • {{ sim.player.positionTm }}</p>
+          <small>{{ sim.player.currentMarketValue || "N/A" }}</small>
+        </div>
+      </div>
+      <div class="similar-player-actions">
+        <p-tag [value]="sim.similarityPercentage + '%'" severity="success" />
+        <p-button
+          icon="pi pi-chart-bar"
+          size="small"
+          [outlined]="true"
+          severity="success"
+          (click)="
+            $event.stopPropagation(); compareWithSimilarPlayer(sim.player)
+          "
+          pTooltip="Compare"
+        />
+      </div>
+    </div>
+    } @if (similarPlayers().length === 0) {
+    <div class="text-center text-muted-color py-4">
+      <i
+        class="pi pi-info-circle"
+        style="font-size: 2rem; margin-bottom: 1rem"
+      ></i>
+      <p>No similar players found.</p>
+    </div>
+    }
+  </div>
+  }
+</p-dialog>
+
+<p-dialog
+  [(visible)]="showCompareDialog"
+  header="Find Player to Compare"
+  [modal]="true"
+  [style]="{ width: '40vw', height: '40vh' }"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="compare-dialog-content">
+    <p-autoComplete
+      [suggestions]="compareResults()"
+      (completeMethod)="onCompareSearch($event.query)"
+      (onSelect)="onCompareSelectDialog($event)"
+      field="originalPlayerName"
+      placeholder="Type player name to search..."
+      [forceSelection]="true"
+      class="w-full mb-3"
+      [inputStyle]="{ width: '100%' }"
+    >
+      <ng-template let-p pTemplate="item">
+        <div class="compare-search-item">
+          <div class="search-item-info">
+            <strong>{{ p.originalPlayerName }}</strong>
+            <small class="text-muted-color d-block"
+              >{{ p.teamName }} • {{ p.positionTm || p.season }}</small
+            >
+          </div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+
+    <p class="text-muted-color text-sm">
+      <i class="pi pi-info-circle mr-2"></i>
+      Search and select a player to compare statistics
+    </p>
+  </div>
+</p-dialog>

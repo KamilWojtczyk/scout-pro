@@ -10,7 +10,6 @@
 
       <div class="dashboard-grid">
         <div class="flex flex-column">
-          <!-- Position -------------------------------------------------------->
           <div class="mb-4">
             <label class="block text-sm font-medium mb-2 text-color"
               >Position</label
@@ -26,7 +25,6 @@
             </p-select>
           </div>
 
-          <!-- Team ------------------------------------------------------------>
           <div class="mb-4">
             <label class="block text-sm font-medium mb-2 text-color"
               >Team</label
@@ -42,7 +40,6 @@
             </p-select>
           </div>
 
-          <!-- Competition ----------------------------------------------------->
           <div class="mb-4">
             <label class="block text-sm font-medium mb-2 text-color"
               >Competition</label
@@ -58,7 +55,6 @@
             </p-select>
           </div>
 
-          <!-- Age range ------------------------------------------------------->
           <div class="mb-4">
             <label class="block text-sm font-medium mb-3 text-color">
               Age {{ ageRange[0] }} – {{ ageRange[1] }}
@@ -72,7 +68,6 @@
             </p-slider>
           </div>
 
-          <!-- Minimum minutes ------------------------------------------------->
           <div class="mb-4">
             <label class="block text-sm font-medium mb-3 text-color">
               Min Minutes
@@ -86,7 +81,6 @@
             />
           </div>
 
-          <!-- Market-value range --------------------------------------------->
           <div class="mb-4">
             <label class="block text-sm font-medium mb-1 text-color">
               Market Value € {{ mvRange[0] | number : "1.0-0" }} –
@@ -102,7 +96,6 @@
             </p-slider>
           </div>
 
-          <!-- Search button --------------------------------------------------->
           <div class="flex justify-content-between">
             <p-button
               label="Clear"
@@ -138,7 +131,6 @@
               <th>Position</th>
               <th>Team</th>
               <th>Age</th>
-              <th>Season</th>
               <th>Market Value</th>
             </tr>
           </ng-template>
@@ -150,29 +142,26 @@
                   <div
                     class="bg-primary text-white border-circle w-2rem h-2rem flex align-items-center justify-content-center text-xs font-bold"
                   >
-                    {{ getPlayerInitials(player.original_player_name) }}
+                    {{ getPlayerInitials(player.originalPlayerName) }}
                   </div>
                   <span class="font-medium">{{
-                    player.original_player_name
+                    player.originalPlayerName
                   }}</span>
                 </div>
               </td>
               <td>
                 <p-tag
-                  [value]="player.primary_position"
-                  [style]="getPositionTagStyle(player.positional_group)"
+                  [value]="player.positionTm"
+                  [style]="getPositionTagStyle(player.positionTm)"
                   [rounded]="true"
                 >
                 </p-tag>
               </td>
-              <td>{{ player.team }}</td>
+              <td>{{ player.teamName }}</td>
               <td>{{ player.age }}</td>
               <td>
-                <span class="font-medium">{{ player.season }}</span>
-              </td>
-              <td>
                 <span class="font-medium">{{
-                  player.current_market_value || "N/A"
+                  player.currentMarketValue || "N/A"
                 }}</span>
               </td>
             </tr>
@@ -232,13 +221,11 @@
       <div class="col-12">
         <div class="flex flex-column align-items-center">
           <div class="football-pitch">
-            <!-- boxes (goal & penalty) -->
             <div class="box goal top"></div>
             <div class="box penalty top"></div>
             <div class="box goal bottom"></div>
             <div class="box penalty bottom"></div>
 
-            <!-- players -->
             <div
               *ngFor="let p of positions()"
               class="position-circle"
@@ -248,7 +235,6 @@
             </div>
           </div>
 
-          <!-- formation chips -->
           <div class="flex gap-2 mt-3">
             <p-button
               *ngFor="let f of formations"

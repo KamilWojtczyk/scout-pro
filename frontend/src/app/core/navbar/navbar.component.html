@@ -22,14 +22,12 @@
         (completeMethod)="onSearch($event.query)"
         (onSelect)="onPick($event)"
         placeholder="Enter player name…"
-        field="original_player_name"
+        field="originalPlayerName"
         [forceSelection]="true"
       >
         <ng-template let-p pTemplate="item">
-          {{ p.original_player_name }}&nbsp;
-          <small class="text-muted-color">
-            ({{ p.team }} • {{ p.season }})</small
-          >
+          {{ p.originalPlayerName }}&nbsp;
+          <small class="text-muted-color"> ({{ p.teamName }})</small>
         </ng-template>
       </p-autoComplete>
     </div>

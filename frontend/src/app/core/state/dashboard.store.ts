@@ -26,14 +26,13 @@ export class DashboardStore {
   private readonly ageMin = signal<number | null>(null);
   private readonly ageMax = signal<number | null>(null);
   private readonly minutesMin = signal<number | null>(null);
-  private readonly mvMin = signal<number | null>(null); // market value €
+  private readonly mvMin = signal<number | null>(null);
   private readonly mvMax = signal<number | null>(null);
   private readonly search = signal<string | null>(null);
 
   readonly stats = signal({
     total_players: 0,
     positions: {} as Record<string, number>,
-    seasons: {} as Record<string, number>,
     competitions: {} as Record<string, number>,
     teams: {} as Record<string, number>,
   });
@@ -124,7 +123,7 @@ export class DashboardStore {
   }
 
   readonly positionsOptions = computed(() =>
-    Object.keys(this.stats().positions).map((label) => ({
+    Object.keys(this.stats()?.positions).map((label) => ({
       label,
       value: label,
     }))
@@ -149,7 +148,3 @@ export class DashboardStore {
     () => Object.keys(this.stats().positions).length
   );
 }
-
-// ---------------------------------------------------------------------------
-//  End of file
-// ---------------------------------------------------------------------------

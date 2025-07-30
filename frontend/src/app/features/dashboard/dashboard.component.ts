@@ -106,35 +106,34 @@ export class DashboardComponent {
   }
   getPlayerInitials(name: string): string {
     return name
-      .split(' ')
+      ?.split(' ')
       .map((n) => n[0])
       .join('')
       .toUpperCase()
       .substring(0, 2);
   }
 
-  getPositionTagStyle(position: string) {
-    const colors: { [key: string]: string } = {
-      GK: '#2563eb',
-      CB: '#059669',
-      FB: '#059669',
-      CM: '#7c3aed',
-      DM: '#7c3aed',
-      FOR: '#dc2626',
-      ST: '#dc2626',
+  getPositionTagStyle(position: string | null | undefined) {
+    const clrByKeyword: Record<string, string> = {
+      goalkeeper: '#2563eb',
+      defender: '#059669',
+      midfield: '#7c3aed',
+      attack: '#dc2626',
     };
 
-    return {
-      'background-color': colors[position] || 'var(--p-primary-600)',
-      color: 'white',
-    };
+    const txt = (position ?? '').toLowerCase();
+
+    const hex =
+      Object.entries(clrByKeyword).find(([kw]) => txt.includes(kw))?.[1] ??
+      'var(--p-primary-600)'; // fallback
+
+    return { 'background-color': hex, color: 'white' };
   }
 
   navigateToPlayer(player: Player) {
-    this.router.navigate(['/player', player.normalized_player_name], {
+    this.router.navigate(['/player', player.normalizedName], {
       queryParams: {
-        team: player.team,
-        season: player.season,
+        teamName: player.teamName,
       },
     });
   }
