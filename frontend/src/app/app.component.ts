@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
@@ -11,19 +11,4 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'ScoutPro';
-
-  isMobile: boolean = false;
-
-  ngOnInit() {
-    this.checkScreenSize();
-  }
-
-  @HostListener('window:resize', [])
-  onResize() {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth < 768;
-  }
 }

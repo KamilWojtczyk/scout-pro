@@ -18,7 +18,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { SelectModule } from 'primeng/select';
 import { PlayerService } from '../../core/api/player.service';
 import { DialogModule } from 'primeng/dialog';
-import { formationLabelToBucket } from '../../core/func/functions';
 
 @Component({
   selector: 'app-dashboard',
@@ -135,6 +134,7 @@ export class DashboardComponent {
   selectFormation(f: Formation) {
     this.selectedFormation = f;
   }
+
   getPlayerInitials(name: string): string {
     return name
       ?.split(' ')

@@ -1,33 +1,40 @@
 <div class="navbar p-3 surface-900 border-surface-700">
-  <div class="grid m-0">
-    <div class="col-3 p-0">
-      <div
-        class="flex align-items-center gap-3 cursor-pointer"
-        (click)="navigateToHomePage()"
-      >
-        <i class="pi pi-chart-line text-3xl text-primary-300"></i>
-        <div>
-          <h1 class="text-2xl m-0 line-height-1 text-primary-100 font-bold">
-            ScoutPro
-          </h1>
-          <small class="text-xs text-primary-300">Scouting Platform</small>
-        </div>
+  <div class="flex align-items-center justify-content-between w-full">
+    <div
+      class="flex align-items-center gap-3 cursor-pointer flex-shrink-0"
+      (click)="navigateToHomePage()"
+    >
+      <i class="pi pi-chart-line text-2xl lg:text-3xl text-primary-300"></i>
+      <div class="hidden sm:block">
+        <h1
+          class="text-xl lg:text-2xl m-0 line-height-1 text-primary-100 font-bold"
+        >
+          ScoutPro
+        </h1>
+        <small class="text-xs text-primary-300">Scouting Platform</small>
       </div>
     </div>
 
-    <div class="col-6 p-0">
+    <div class="flex-1 max-w-md mx-2 sm:mx-4">
       <p-autoComplete
         class="w-full"
         [suggestions]="results()"
         (completeMethod)="onSearch($event.query)"
         (onSelect)="onPick($event)"
-        placeholder="Enter player name…"
+        placeholder="Search players..."
         field="originalPlayerName"
         [forceSelection]="true"
+        size="small"
+        inputStyleClass="p-inputtext-sm"
+        panelStyleClass="navbar-ac-panel"
       >
         <ng-template let-p pTemplate="item">
-          {{ p.originalPlayerName }}&nbsp;
-          <small class="text-muted-color"> ({{ p.teamName }})</small>
+          <div class="flex align-items-center gap-2 py-2">
+            <div class="flex flex-column">
+              {{ p.originalPlayerName }}&nbsp;
+              <small class="text-muted-color"> ({{ p.teamName }})</small>
+            </div>
+          </div>
         </ng-template>
       </p-autoComplete>
     </div>

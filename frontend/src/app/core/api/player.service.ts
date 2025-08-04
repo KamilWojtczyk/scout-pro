@@ -93,7 +93,6 @@ export class PlayerService {
     return this.players$.pipe(
       switchMap((rows) => {
         if (!rows) return of(this.emptyResponse());
-        console.log(rows);
         let data = rows;
 
         if (params['position'])

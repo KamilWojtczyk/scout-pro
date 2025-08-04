@@ -1,4 +1,4 @@
-<div class="surface-card py-2 px-6 border-round-lg">
+<div class="surface-card py-2 px-2 border-round-lg sm:px-6">
   @if (player(); as player) {
 
   <!-- Header -->
@@ -16,14 +16,28 @@
   <div class="grid">
     <div class="col-12">
       <p-panel header="Player Information" class="mb-4 info-panel">
-        <div class="flex gap-4">
-          <div class="player-image-container">
+        <div class="flex flex-column sm:flex-row gap-4">
+          <div
+            class="flex justify-content-between align-items-start player-image-container"
+          >
             <img
               class="player-image border-round-3xl"
               [src]="playerImageUrl"
               [alt]="player.originalPlayerName"
               onerror="this.src='https://via.placeholder.com/120x120/6c757d/ffffff?text=No+Image'"
             />
+            <a
+              [href]="transfermarktUrl"
+              target="_blank"
+              rel="noopener"
+              class="no-underline sm:hidden"
+            >
+              <p-button
+                icon="pi pi-external-link"
+                label="TM"
+                styleClass="p-button-outlined p-button-rounded"
+              />
+            </a>
           </div>
 
           <div class="flex-1">
@@ -51,7 +65,7 @@
                 [href]="transfermarktUrl"
                 target="_blank"
                 rel="noopener"
-                class="no-underline"
+                class="no-underline hidden sm:block"
               >
                 <p-button
                   icon="pi pi-external-link"
@@ -164,9 +178,9 @@
                   </div>
                   <div class="stat-item">
                     <span class="stat-label">Dribble Success</span>
-                    <span class="stat-value"
-                      >{{ player.dribbleSuccessPct }}%</span
-                    >
+                    <span class="stat-value">{{
+                      getPlayerStat(player, "dribbleSuccessPct")
+                    }}</span>
                   </div>
                   <div class="stat-item">
                     <span class="stat-label">Aerial Win Rate</span>

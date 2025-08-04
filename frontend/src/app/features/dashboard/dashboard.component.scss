@@ -1,4 +1,3 @@
-/* === layout grid ====================================================== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -55,15 +54,9 @@
   }
 }
 
-/* === Mobile Optimizations for Stats Cards ======================= */
 @media (max-width: 480px) {
   .stats-row {
     gap: 0.75rem;
-  }
-
-  .stat-card {
-    padding: 0.75rem;
-    min-width: unset;
   }
 
   .stat-icon {
@@ -77,12 +70,39 @@
   }
 }
 
-/* === pitch drawing ==================================================== */
+@media (max-width: 1200px) {
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .stat-icon {
+    font-size: 1.5r;
+  }
+
+  .stat-number {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+  }
+}
+
+.min-w-200 {
+  min-width: 220px;
+}
+
 .football-pitch {
   --line: rgba(255, 255, 255, 0.6);
 
   position: relative;
-  width: 320px;
+  width: 100%;
+  max-width: 320px;
   height: 540px;
   background: #4caf50;
   border: 3px solid #ffffff;
@@ -127,7 +147,6 @@
     pointer-events: none;
   }
 
-  /* boxes */
   .box {
     position: absolute;
     left: 50%;
@@ -135,7 +154,7 @@
     border: 2px solid var(--line);
 
     &.goal {
-      width: 100px; /* 6-yard box width */
+      width: 100px;
       height: 40px;
     }
     &.penalty {
@@ -154,7 +173,12 @@
   }
 }
 
-/* === player dots ====================================================== */
+@media (max-width: 768px) {
+  .football-pitch {
+    height: 460px;
+  }
+}
+
 .position-circle {
   z-index: 2;
   position: absolute;

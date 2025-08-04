@@ -260,7 +260,7 @@ export class PlayerDetailComponent {
     if (value === null || value === undefined) return '0';
 
     if (statKey.includes('Pct') || statKey.includes('percentage')) {
-      return `${value}%`;
+      return `${value.toFixed(0)}%`;
     }
 
     if (statKey === 'minutesPlayed' && value > 1000) {

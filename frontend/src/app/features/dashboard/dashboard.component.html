@@ -1,121 +1,121 @@
 <div class="surface-card p-2 pb-0 mt-1 border-round-lg grid">
-  <div class="col-12 xl:col-9 pl-0 pb-0">
+  <div class="col-12 xl:col-9 p-0">
     <p-panel header="Player Database">
-      <ng-template pTemplate="header">
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-table text-primary"></i>
-          <span class="font-semibold">Player Database</span>
-        </div>
-      </ng-template>
-
       <div class="dashboard-grid">
         <div class="flex flex-column">
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2 text-color"
-              >Position</label
-            >
-            <p-select
-              [options]="positionsOptions()"
-              [(ngModel)]="selectedPos"
-              placeholder="Select Position"
-              optionLabel="label"
-              optionValue="value"
-              class="w-full"
-            >
-            </p-select>
-          </div>
+          <div class="grid">
+            <div class="col-12">
+              <label class="block text-sm font-medium mb-2 text-color"
+                >Position</label
+              >
+              <p-select
+                [options]="positionsOptions()"
+                [(ngModel)]="selectedPos"
+                placeholder="Select Position"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full"
+              >
+              </p-select>
+            </div>
 
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2 text-color"
-              >Team</label
-            >
-            <p-select
-              [options]="teamsOptions()"
-              [(ngModel)]="selectedTeam"
-              placeholder="Select Team"
-              optionLabel="label"
-              optionValue="value"
-              class="w-full"
-            >
-            </p-select>
-          </div>
+            <div class="col-12">
+              <label class="block text-sm font-medium mb-2 text-color"
+                >Team</label
+              >
+              <p-select
+                [options]="teamsOptions()"
+                [(ngModel)]="selectedTeam"
+                placeholder="Select Team"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full"
+              >
+              </p-select>
+            </div>
 
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-2 text-color"
-              >Competition</label
-            >
-            <p-select
-              [options]="competitionsOptions()"
-              [(ngModel)]="selectedComp"
-              placeholder="Select Competition"
-              optionLabel="label"
-              optionValue="value"
-              class="w-full"
-            >
-            </p-select>
-          </div>
+            <div class="col-12">
+              <label class="block text-sm font-medium mb-2 text-color"
+                >Competition</label
+              >
+              <p-select
+                [options]="competitionsOptions()"
+                [(ngModel)]="selectedComp"
+                placeholder="Select Competition"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full"
+              >
+              </p-select>
+            </div>
 
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-3 text-color">
-              Age {{ ageRange[0] }} – {{ ageRange[1] }}
-            </label>
-            <p-slider
-              [range]="true"
-              [(ngModel)]="ageRange"
-              [min]="15"
-              [max]="50"
-            >
-            </p-slider>
-          </div>
+            <div class="col-12">
+              <label class="block text-sm font-medium mb-3 text-color">
+                Age {{ ageRange[0] }} – {{ ageRange[1] }}
+              </label>
+              <p-slider
+                [range]="true"
+                [(ngModel)]="ageRange"
+                [min]="15"
+                [max]="50"
+                class="w-full"
+              >
+              </p-slider>
+            </div>
 
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-3 text-color">
-              Min Minutes
-            </label>
-            <input
-              type="number"
-              pInputText
-              [(ngModel)]="minutesMin"
-              min="0"
-              class="w-full"
-            />
-          </div>
+            <div class="col-12">
+              <label class="block text-sm font-medium mb-3 text-color">
+                Min Minutes
+              </label>
+              <input
+                type="number"
+                pInputText
+                [(ngModel)]="minutesMin"
+                min="0"
+                class="w-full"
+              />
+            </div>
 
-          <div class="mb-4">
-            <label class="block text-sm font-medium mb-1 text-color">
-              Market Value € {{ mvRange[0] | number : "1.0-0" }} –
-              {{ mvRange[1] | number : "1.0-0" }}
-            </label>
-            <p-slider
-              [range]="true"
-              [(ngModel)]="mvRange"
-              [min]="0"
-              [max]="50_000_000"
-              [step]="250_000"
-            >
-            </p-slider>
-          </div>
+            <div class="col-12">
+              <label class="block text-sm font-medium mb-1 text-color">
+                Market Value € {{ mvRange[0] | number : "1.0-0" }} –
+                {{ mvRange[1] | number : "1.0-0" }}
+              </label>
+              <p-slider
+                [range]="true"
+                [(ngModel)]="mvRange"
+                [min]="0"
+                [max]="50_000_000"
+                [step]="250_000"
+                class="w-full"
+              >
+              </p-slider>
+            </div>
 
-          <div class="flex justify-content-between">
-            <p-button
-              label="Clear"
-              icon="pi pi-times"
-              class="w-full"
-              severity="secondary"
-              (onClick)="clearFilters()"
-            >
-            </p-button>
-            <p-button
-              label="Search"
-              icon="pi pi-filter"
-              class="w-full"
-              (onClick)="applyFilters()"
-            >
-            </p-button>
+            <div class="col-12">
+              <div class="flex justify-content-between">
+                <p-button
+                  label="Clear"
+                  icon="pi pi-times"
+                  class="w-full"
+                  severity="secondary"
+                  (onClick)="clearFilters()"
+                >
+                </p-button>
+                <p-button
+                  label="Search"
+                  icon="pi pi-filter"
+                  class="w-full"
+                  (onClick)="applyFilters()"
+                >
+                </p-button>
+              </div>
+            </div>
           </div>
         </div>
 
         <p-table
+          class="w-full min-w-200 p-datatable-sm"
           [value]="pageSlice()"
           [lazy]="true"
           [paginator]="true"
@@ -124,6 +124,8 @@
           (onLazyLoad)="onLazy($event)"
           [rowHover]="true"
           styleClass="p-datatable-sm"
+          [responsiveLayout]="'stack'"
+          [breakpoint]="'760px'"
         >
           <ng-template pTemplate="header">
             <tr>
@@ -144,7 +146,7 @@
                   >
                     {{ getPlayerInitials(player.originalPlayerName) }}
                   </div>
-                  <span class="font-medium">{{
+                  <span class="font-medium text-sm">{{
                     player.originalPlayerName
                   }}</span>
                 </div>
@@ -154,8 +156,7 @@
                   [value]="player.positionTm"
                   [style]="getPositionTagStyle(player.positionTm)"
                   [rounded]="true"
-                >
-                </p-tag>
+                ></p-tag>
               </td>
               <td>{{ player.teamName }}</td>
               <td>{{ player.age }}</td>
@@ -170,9 +171,12 @@
       </div>
     </p-panel>
   </div>
+
   <div class="col-12 xl:col-3 pr-0 pb-0">
     <div class="grid">
-      <div class="col-12 md:col-6">
+      <div
+        class="col-6 pt-2 pl-0 xl:pt-0 lg:pt-2 lg:pl-2 md:pl-0 md:pt-2 sm:pt-0 sm:pl-2"
+      >
         <p-card class="h-full">
           <div class="stat-card">
             <i class="pi pi-users stat-icon"></i>
@@ -185,7 +189,9 @@
           </div>
         </p-card>
       </div>
-      <div class="col-12 md:col-6">
+      <div
+        class="col-6 pt-2 pl-0 xl:pt-0 lg:pt-2 lg:pl-2 md:pl-0 md:pt-2 sm:pt-0 sm:pl-2"
+      >
         <p-card class="h-full">
           <div class="stat-card">
             <i class="pi pi-globe stat-icon"></i>
@@ -196,7 +202,9 @@
           </div>
         </p-card>
       </div>
-      <div class="col-12 md:col-6">
+      <div
+        class="col-6 pt-2 pl-0 xl:pt-0 lg:pt-2 lg:pl-2 md:pl-0 md:pt-2 sm:pt-0 sm:pl-2"
+      >
         <p-card class="h-full">
           <div class="stat-card">
             <i class="pi pi-building stat-icon"></i>
@@ -207,7 +215,9 @@
           </div>
         </p-card>
       </div>
-      <div class="col-12 md:col-6">
+      <div
+        class="col-6 pt-2 pl-0 xl:pt-0 lg:pt-2 lg:pl-2 md:pl-0 md:pt-2 sm:pt-0 sm:pl-2"
+      >
         <p-card class="h-full">
           <div class="stat-card">
             <i class="pi pi-map stat-icon"></i>
@@ -218,7 +228,8 @@
           </div>
         </p-card>
       </div>
-      <div class="col-12">
+
+      <div class="col-12 pt-2 pl-0 md:pl-0 md:pt-2 sm:pt-0 sm:pl-2">
         <div class="flex flex-column align-items-center">
           <div class="football-pitch">
             <div class="box goal top"></div>
@@ -236,13 +247,14 @@
             </div>
           </div>
 
-          <div class="flex gap-2 mt-3">
+          <div class="flex gap-1 mt-3 flex-wrap justify-content-center">
             <p-button
               *ngFor="let f of formations"
-              label="{{ f.name }}"
+              [label]="f.name"
               size="small"
               [outlined]="f !== selectedFormation"
               (onClick)="selectFormation(f)"
+              class="text-xs px-2"
             ></p-button>
           </div>
         </div>
@@ -255,7 +267,7 @@
   [(visible)]="showTopDialog"
   [header]="'Top Players - ' + (clickedPosition() || 'Position')"
   [modal]="true"
-  [style]="{ width: '50vw' }"
+  [style]="{ width: '95vw', maxWidth: '700px' }"
   [closable]="true"
   [draggable]="false"
   [resizable]="false"
@@ -263,15 +275,19 @@
   <div class="top-players-dialog-content">
     @for (player of topPlayers(); track player.normalizedName) {
     <div
-      class="top-player-item-dialog"
+      class="top-player-item-dialog mobile-player-item"
       (click)="navigateToPlayerFromDialog(player)"
     >
       <div class="top-player-info">
         <img [src]="getPlayerImageUrl(player)" class="top-player-avatar" />
         <div class="top-player-details">
-          <h4>{{ player.originalPlayerName }}</h4>
-          <p>{{ player.teamName }} • {{ player.positionTm }}</p>
-          <small>{{ player.currentMarketValue || "N/A" }}</small>
+          <h4 class="text-base m-0">{{ player.originalPlayerName }}</h4>
+          <p class="text-sm m-0 text-600">
+            {{ player.teamName }} • {{ player.positionTm }}
+          </p>
+          <small class="text-500">{{
+            player.currentMarketValue || "N/A"
+          }}</small>
         </div>
       </div>
     </div>
